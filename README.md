@@ -4,9 +4,7 @@ Play Music from a USB device with Mycroft.ai
 ## About 
 Play local music by inserting a USB drive into your Mycroft device. Upon Inserting a USB Device Mycroft
 will scan the device for MP3 music and add it to a temporary library that you can play by asking. 
-####Supports CPS
 ## Examples
-###Music
 * "play the artist elvis Presley"
 * "play all shook up"
 * "play the song blue suede shoes"
@@ -14,12 +12,11 @@ will scan the device for MP3 music and add it to a temporary library that you ca
 
 ## Credits 
 * PCWii (20200526 Covid-19 Project)
-* Original work forked from https://github.com/Cadair/mycroft-kodi
 * Some elements borrowed from https://github.com/Preston-Sundar/RaspberryPi-Pyudev-Usb-Storage-Detector/blob/master/usbdev.py
 ## Category
 **Media**
 ## Tags
-'#music, #usb, #mycroft.ai, #python, #skills, #mp3'
+'#music, #usb, #mycroft.ai, #python, #skills, #mp3, #CPS'
 ## Require 
 Tested on platform_picroft (others untested) 
 ## Other Requirements
