@@ -21,6 +21,9 @@ class USBMusicSkill(CommonPlaySkill):
         self.status = False
         self.path = ""
 
+    def initialize(self):
+        self.monitor_usb()
+
     def CPS_match_query_phrase(self, phrase):
         """
             The method is invoked by the PlayBackControlSkill.
