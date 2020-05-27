@@ -6,6 +6,7 @@ import re
 from .usbdev import usbScan
 import time
 import os
+from os.path import dirname, join
 from mutagen.easyid3 import EasyID3
 
 
@@ -20,9 +21,11 @@ class USBMusicSkill(CommonPlaySkill):
         self.prev_status = False
         self.status = False
         self.path = ""
+        LOG.info("USB Music Skill Loaded!")
 
     def initialize(self):
-        LOG.info("USB Music Skill Loaded!")
+        self.load_data_files(dirname(__file__))
+        LOG.info("USB Music Skill Initialized!")
         self.monitor_usb()
 
     def CPS_match_query_phrase(self, phrase):
