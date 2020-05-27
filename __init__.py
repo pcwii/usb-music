@@ -35,12 +35,12 @@ class USBMusicSkill(CommonPlaySkill):
     def initialize(self):
         self.load_data_files(dirname(__file__))
         LOG.info("USB Music Skill Initialized!")
-        #self.usb_monitor.idStop = False
-        #self.usb_monitor.id = 101
-        #self.usb_monitor.idThread = threading.Thread(target=self.monitor_usb,
-                                                     #args=(self.usb_monitor.id, lambda: self.usb_monitor.idStop))
-        #self.usb_monitor.idThread.start()
-        self.monitor_usb()
+        self.usb_monitor.idStop = False
+        self.usb_monitor.id = 101
+        self.usb_monitor.idThread = threading.Thread(target=self.monitor_usb,
+                                                     args=(self.usb_monitor.id, lambda: self.usb_monitor.idStop))
+        self.usb_monitor.idThread.start()
+        #self.monitor_usb()
 
     def CPS_match_query_phrase(self, phrase):
         """
