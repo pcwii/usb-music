@@ -4,7 +4,7 @@ from mycroft.util.log import LOG
 
 import threading
 
-from usbScan import usbdev
+from .usbScan import usbdev
 
 import time
 import os
