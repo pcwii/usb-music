@@ -143,7 +143,6 @@ class USBMusicSkill(CommonPlaySkill):
         else:
             # Play Music Added here
             LOG.info("USB Device Not Detected")
-            self.continue_play_music_intent(message)
 
     def stop(self):
         pass
