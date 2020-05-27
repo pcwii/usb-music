@@ -6,7 +6,7 @@ import re
 import threading
 
 #from .usbdev_class import usbScan
-import app.usbdev as usbScan
+import usbdev as usbScan
 
 import time
 import os
