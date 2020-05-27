@@ -1,0 +1,131 @@
+from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
+from adapt.intent import IntentBuilder
+from mycroft.util.log import LOG
+
+import re
+import usbdev
+import time
+import os
+from mutagen.easyid3 import EasyID3
+
+
+class USBMusicSkill(CommonPlaySkill):
+    def __init__(self):
+        super(USBMusicSkill, self).__init__('USBMusicSkill')
+        self.song_list = []
+        self.prev_status = False
+        self.song_artist = ""
+        self.song_title = ""
+        self.song_album = ""
+        self.prev_status = False
+        self.status = False
+        self.path = ""
+
+    def CPS_match_query_phrase(self, phrase):
+        """
+            The method is invoked by the PlayBackControlSkill.
+        """
+        LOG.info('USBMusicSkill received the following phrase: ' + phrase)
+        if self.status:
+            LOG.info("Searching for requested media...")
+            # match_level = CPSMatchLevel.EXACT
+            # playback_device = device_id
+            # Todo add proper cps match level
+            data = {
+                "track": "my Movie Name"
+            }
+            #return (phrase, match_level, data)
+            return None # until a match is found
+        else:
+            LOG.info("NO USB Device, Passing on this request")
+            return None
+
+    def CPS_start(self, phrase, data):
+        """ Starts playback.
+            Called by the playback control skill to start playback if the
+            skill is selected (has the best match level)
+        """
+        LOG.info('USBMusicSkill received the following phrase and Data: ' + phrase + ' ' + data['track'])
+        url = data['track']
+        self.audioservice.play(url)  #
+        pass
+
+    def monitor_usb(self):
+        while True:
+            time.sleep(1)
+            # get the status of the connected usb device
+            self.status = usbdev.isDeviceConnected()
+            if self.status != self.prev_status:
+                LOG.info("Status Changed!")
+                self.prev_status = self.status
+                if self.status:
+                    LOG.info("Device Inserted!")
+                    device = usbdev.getDevData()
+                    # get the path (currently set for Rpi, can be changed)
+                    self.path = usbdev.getMountPathUsbDevice()
+                    LOG.info("Stat: " + str(self.status))
+                    LOG.info("dev: " + str(device))
+                    LOG.info("path: " + str(self.path))
+                    LOG.info("---------------------------------")
+                    self.speak_dialog('update.library', expect_response=False)
+                    self.song_list = self.create_library(self.path)
+                else:
+                    LOG.info("Device Removed!")
+                    self.speak_dialog('usb.removed', expect_response=False)
+                    self.song_list = []
+                    self.path = ""
+        #usbdev.stopListener(observer)
+
+    def create_library(self, usb_path):
+        new_library = []
+        for root, d_names, f_names in os.walk(str(usb_path)):
+            for fileName in f_names:
+                if "mp3" in str(fileName):
+                    song_path = str(root) + "/" + str(fileName)
+                    LOG.info("Found mp3: " + song_path)
+                    audio = EasyID3(song_path)
+                    try:
+                        if len(audio["title"]):
+                            self.song_title = audio["title"][0]
+                        else:
+                            self.song_title = ""
+                        if len(audio["artist"]):
+                            self.song_artist = audio["artist"][0]
+                        else:
+                            self.song_artist = ""
+                        if len(audio["album"]):
+                            self.song_album = audio["album"][0]
+                        else:
+                            self.song_album = ""
+                    except:
+                        pass
+                    info = {
+                        "location": song_path,
+                        "label": self.song_title,
+                        "artist": self.song_artist,
+                        "album": self.song_album
+                    }
+                    new_library.append(info)
+        # Todo announce how many songs where found
+        self.speak_dialog('scan.complete', expect_response=False)
+        song_count = len(new_library)
+        LOG.info("Added: " + str(song_count) + " to the library from the USB Device")
+        return new_library
+
+    @intent_handler(IntentBuilder('UpdateLibraryIntent').require("UpdateKeyword").require("USBKeyword").
+                    require("LibraryKeyword").build())
+    def handle_update_library_intent(self, message):
+        LOG.info("Called Update Library Intent")
+        if self.status:
+            self.speak_dialog('update.library', expect_response=False)
+            self.song_list = self.create_library(self.path)
+        else:
+            # Play Music Added here
+            LOG.info("USB Device Not Detected")
+            self.continue_play_music_intent(message)
+
+    def stop(self):
+        pass
+
+def create_skill():
+    return USBMusicSkill()
