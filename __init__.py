@@ -22,6 +22,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.path = ""
 
     def initialize(self):
+        LOG.info("USB Music Skill Loaded!")
         self.monitor_usb()
 
     def CPS_match_query_phrase(self, phrase):
