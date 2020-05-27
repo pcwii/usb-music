@@ -29,3 +29,4 @@ Tested on platform_picroft (others untested)
 ## Installation Notes
 - SSH and run: msm install https://github.com/pcwii/usb-music.git
 ## Todo
+- Add USB Polling interval to Mycroft.ai web interface (currently 1 second)
