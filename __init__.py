@@ -3,7 +3,8 @@ from adapt.intent import IntentBuilder
 from mycroft.util.log import LOG
 
 import re
-import usbdev
+#import usbdev
+from .usbdev import *
 import time
 import os
 from mutagen.easyid3 import EasyID3
@@ -57,15 +58,18 @@ class USBMusicSkill(CommonPlaySkill):
         while True:
             time.sleep(1) # Todo make the polling time a variable or make it a separate thread
             # get the status of the connected usb device
-            self.status = usbdev.isDeviceConnected()
+            #self.status = usbdev.isDeviceConnected()
+            self.status = isDeviceConnected()
             if self.status != self.prev_status:
                 LOG.info("Status Changed!")
                 self.prev_status = self.status
                 if self.status:
                     LOG.info("Device Inserted!")
-                    device = usbdev.getDevData()
+                    #device = usbdev.getDevData()
+                    device = getDevData()
                     # get the path (currently set for Rpi, can be changed)
-                    self.path = usbdev.getMountPathUsbDevice()
+                    #self.path = usbdev.getMountPathUsbDevice()
+                    self.path = getMountPathUsbDevice()
                     LOG.info("Stat: " + str(self.status))
                     LOG.info("dev: " + str(device))
                     LOG.info("path: " + str(self.path))

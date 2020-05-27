@@ -13,6 +13,7 @@ USBDEV_HAVEDATA = False
 
 
 # callback when a usb device is plugged in
+
 def usbEventCallback(action, device):
     global USBDEV_UUID
     global USBDEV_VENDOR
