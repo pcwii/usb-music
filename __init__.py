@@ -1,16 +1,14 @@
-from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
+from mycroft.skills.common_play_skill import CommonPlaySkill
 from adapt.intent import IntentBuilder
 from mycroft.util.log import LOG
 
-import re
 import threading
 
-#from .usbdev_class import usbScan
-import usbdev as usbScan
+from usbScan import usbdev
 
 import time
 import os
-from os.path import dirname, join
+from os.path import dirname
 from mutagen.easyid3 import EasyID3
 
 
@@ -76,15 +74,15 @@ class USBMusicSkill(CommonPlaySkill):
         while True:
             time.sleep(1) # Todo make the polling time a variable or make it a separate thread
             # get the status of the connected usb device
-            self.status = usbScan.isDeviceConnected()
+            self.status = usbdev.isDeviceConnected()
             if self.status != self.prev_status:
                 LOG.info("Status Changed!")
                 self.prev_status = self.status
                 if self.status:
                     LOG.info("Device Inserted!")
-                    device = usbScan.getDevData()
+                    device = usbdev.getDevData()
                     # get the path (currently set for Rpi, can be changed)
-                    self.path = usbScan.getMountPathUsbDevice()
+                    self.path = usbdev.getMountPathUsbDevice()
                     LOG.info("Stat: " + str(self.status))
                     LOG.info("dev: " + str(device))
                     LOG.info("path: " + str(self.path))
