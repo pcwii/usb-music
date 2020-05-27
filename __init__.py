@@ -71,7 +71,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.audioservice.play(url)  #
         pass
 
-    def monitor_usb(self, my_id, terminate):
+    def monitor_usb(self)#, my_id, terminate):
         LOG.info("USB Monitoring Loop Started!")
         while True:
             time.sleep(1) # Todo make the polling time a variable or make it a separate thread
