@@ -3,6 +3,8 @@ from adapt.intent import IntentBuilder
 from mycroft.util.log import LOG
 
 import re
+import threading
+
 from .usbdev import usbScan
 import time
 import os
@@ -11,6 +13,11 @@ from mutagen.easyid3 import EasyID3
 
 
 class USBMusicSkill(CommonPlaySkill):
+    class NewThread:
+        id = 0
+        idStop = False
+        idThread = threading.Thread
+
     def __init__(self):
         super(USBMusicSkill, self).__init__('USBMusicSkill')
         self.song_list = []
@@ -21,12 +28,17 @@ class USBMusicSkill(CommonPlaySkill):
         self.prev_status = False
         self.status = False
         self.path = ""
+        self.usb_monitor = self.NewThread
         LOG.info("USB Music Skill Loaded!")
 
     def initialize(self):
         self.load_data_files(dirname(__file__))
         LOG.info("USB Music Skill Initialized!")
-        self.monitor_usb()
+        self.usb_monitor.idStop = False
+        self.usb_monitor.id = 101
+        self.usb_monitor.idThread = threading.Thread(target=self.monitor_usb,
+                                                     args=(self.usb_monitor.id, lambda: self.usb_monitor.idStop))
+        self.usb_monitor.idThread.start()
 
     def CPS_match_query_phrase(self, phrase):
         """
@@ -57,7 +69,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.audioservice.play(url)  #
         pass
 
-    def monitor_usb(self):
+    def monitor_usb(self, my_id, terminate):
         LOG.info("USB Monitoring Loop Started!")
         while True:
             time.sleep(1) # Todo make the polling time a variable or make it a separate thread
