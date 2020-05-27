@@ -40,7 +40,7 @@ class USBMusicSkill(CommonPlaySkill):
         #self.usb_monitor.idThread = threading.Thread(target=self.monitor_usb,
                                                      #args=(self.usb_monitor.id, lambda: self.usb_monitor.idStop))
         #self.usb_monitor.idThread.start()
-        self.usb_monitor()
+        self.monitor_usb()
 
     def CPS_match_query_phrase(self, phrase):
         """
