@@ -1,5 +1,6 @@
 from mycroft.skills.common_play_skill import CommonPlaySkill
 from adapt.intent import IntentBuilder
+from mycroft.skills.core import intent_handler, intent_file_handler
 from mycroft.util.log import LOG
 
 import threading
