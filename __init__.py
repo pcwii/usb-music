@@ -175,7 +175,7 @@ class USBMusicSkill(CommonPlaySkill):
                     info = {
                         "location": each_song['location'],
                         "label": each_song['label'],
-                        "songid": each_song['songid'],
+                        "album": each_song['album'],
                         "artist": each_song['artist']
                     }
                     found_list.append(info)
