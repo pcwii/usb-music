@@ -42,9 +42,9 @@ class USBMusicSkill(CommonPlaySkill):
     def init_usb_monitor_thread(self):  # creates the workout thread
         self.usb_monitor.idStop = False
         self.usb_monitor.id = 101
-        self.usb_monitor.idThread = threading.Thread(target=self.monitor_usb,
-                                                      args=(self.monitor_usb.id,
-                                                            lambda: self.monitor_usb.idStop))
+        self.usb_monitor.idThread = threading.Thread(target=self.start_usb_thread,
+                                                     args=(self.usb_monitor.id,
+                                                           lambda: self.usb_monitor.idStop))
         self.usb_monitor.idThread.start()
 
     def halt_usb_monitor_thread(self):  # requests an end to the workout
@@ -85,7 +85,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.audioservice.play(url)  #
         pass
 
-    def monitor_usb(self, my_id, terminate):
+    def start_usb_thread(self, my_id, terminate):
         LOG.info("USB Monitoring Loop Started!")
         while not terminate():  # wait while this interval completes
             time.sleep(1) # Todo make the polling time a variable or make it a separate thread
