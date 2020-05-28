@@ -84,13 +84,16 @@ class USBMusicSkill(CommonPlaySkill):
             music_playlist = self.search_music_library(play_request[0],
                                                        category=play_request[1])  # search for the item in the library
 
-            if len(music_playlist) > 0:
-                match_level = CPSMatchLevel.EXACT
-                data = music_playlist
-                LOG.info('Music found that matched the request!')
-                return phrase, match_level, data
+            if music_playlist is None:
+                return None  # until a match is found
             else:
-                return None # until a match is found
+                if len(music_playlist) > 0:
+                    match_level = CPSMatchLevel.EXACT
+                    data = music_playlist
+                    LOG.info('Music found that matched the request!')
+                    return phrase, match_level, data
+                else:
+                    return None  # until a match is found
         else:
             LOG.info("NO USB Device, Passing on this request")
             return None
