@@ -245,18 +245,18 @@ class USBMusicSkill(CommonPlaySkill):
                     LOG.info("Found mp3: " + song_path)
                     audio = EasyID3(song_path)
                     try:
-                        if len(audio["title"]):
+                        if audio["title"] is None:
+                            self.song_label = str(fileName)[:-4]
+                        else:
                             self.song_label = audio["title"][0]
-                        else:
-                            self.song_label = ""
-                        if len(audio["artist"]):
-                            self.song_artist = audio["artist"][0]
-                        else:
+                        if audio["artist"] is None:
                             self.song_artist = ""
-                        if len(audio["album"]):
-                            self.song_album = audio["album"][0]
                         else:
+                            self.song_artist = audio["artist"][0]
+                        if audio["album"] is None:
                             self.song_album = ""
+                        else:
+                            self.song_album = audio["album"][0]
                     except:
                         pass
                     info = {
