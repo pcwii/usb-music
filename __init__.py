@@ -183,6 +183,12 @@ class USBMusicSkill(CommonPlaySkill):
         # remove duplicates
         temp_list = []  # this is a dict
         for each_song in found_list:
+            info = {
+                "location": each_song['location'],
+                "label": each_song['label'],
+                "album": each_song['album'],
+                "artist": each_song['artist']
+            }
             song_title = str(each_song['label'])
             if song_title not in str(temp_list):
                 temp_list.append(info)
