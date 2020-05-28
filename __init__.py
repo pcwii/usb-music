@@ -13,11 +13,13 @@ from os.path import dirname
 from mutagen.easyid3 import EasyID3
 
 
+class NewThread:
+    id = 0
+    idStop = False
+    idThread = threading.Thread
+
+
 class USBMusicSkill(CommonPlaySkill):
-    class NewThread:
-        id = 0
-        idStop = False
-        idThread = threading.Thread
 
     def __init__(self):
         super(USBMusicSkill, self).__init__('USBMusicSkill')
@@ -29,18 +31,30 @@ class USBMusicSkill(CommonPlaySkill):
         self.prev_status = False
         self.status = False
         self.path = ""
-        self.usb_monitor = self.NewThread
+        self.usb_monitor = NewThread
         LOG.info("USB Music Skill Loaded!")
 
     def initialize(self):
         self.load_data_files(dirname(__file__))
         LOG.info("USB Music Skill Initialized!")
+        self.init_usb_monitor_thread()
+
+    def init_usb_monitor_thread(self):  # creates the workout thread
         self.usb_monitor.idStop = False
         self.usb_monitor.id = 101
         self.usb_monitor.idThread = threading.Thread(target=self.monitor_usb,
-                                                     args=(self.usb_monitor.id, lambda: self.usb_monitor.idStop))
+                                                      args=(self.monitor_usb.id,
+                                                            lambda: self.monitor_usb.idStop))
         self.usb_monitor.idThread.start()
-        #self.monitor_usb()
+
+    def halt_usb_monitor_thread(self):  # requests an end to the workout
+        try:
+            self.usb_monitor.id = 101
+            self.usb_monitor.idStop = True
+            self.usb_monitor.idThread.join()
+        except Exception as e:
+            LOG.error(e)  # if there is an error attempting the workout then here....
+
 
     def CPS_match_query_phrase(self, phrase):
         """
@@ -71,11 +85,11 @@ class USBMusicSkill(CommonPlaySkill):
         self.audioservice.play(url)  #
         pass
 
-    def monitor_usb(self):  #, my_id, terminate):
+    def monitor_usb(self, my_id, terminate):
         LOG.info("USB Monitoring Loop Started!")
-        while True:
+        while not terminate():  # wait while this interval completes
             time.sleep(1) # Todo make the polling time a variable or make it a separate thread
-            LOG.info("Checking USB Device")
+            #LOG.info("Checking USB Device")
             # get the status of the connected usb device
             self.status = usbdev.isDeviceConnected()
             if self.status != self.prev_status:
@@ -147,6 +161,7 @@ class USBMusicSkill(CommonPlaySkill):
             LOG.info("USB Device Not Detected")
 
     def stop(self):
+        self.halt_usb_monitor_thread()
         pass
 
 def create_skill():
