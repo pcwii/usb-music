@@ -32,6 +32,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.status = False
         self.path = ""
         self.usb_monitor = NewThread
+        self.usbdevice = usbdev
         LOG.info("USB Music Skill Loaded!")
 
     def initialize(self):
@@ -91,15 +92,16 @@ class USBMusicSkill(CommonPlaySkill):
             time.sleep(1) # Todo make the polling time a variable or make it a separate thread
             LOG.info("Checking USB Device")
             # get the status of the connected usb device
-            self.status = usbdev.isDeviceConnected()
+            self.status = self.usbdevice.isDeviceConnected()
+            LOG.info("Checking USB Device: " + str(self.status))
             if self.status != self.prev_status:
                 #LOG.info("Status Changed!")
                 self.prev_status = self.status
                 if self.status:
                     LOG.info("Device Inserted!")
-                    device = usbdev.getDevData()
+                    device = self.usbdevice.getDevData()
                     # get the path (currently set for Rpi, can be changed)
-                    self.path = usbdev.getMountPathUsbDevice()
+                    self.path = self.usbdevice.getMountPathUsbDevice()
                     LOG.info("Stat: " + str(self.status))
                     LOG.info("dev: " + str(device))
                     LOG.info("path: " + str(self.path))
