@@ -101,7 +101,7 @@ def getMountPathUsbDevice(password):
         if not os.path.exists('mp'):
             os.makedirs('mp')
 
-        command = "mount -r " + USBDEV_DEVPATH + " mp"
+        command = "mount " + USBDEV_DEVPATH + " mp"
         p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
 
         # mount the dev path to the folder
