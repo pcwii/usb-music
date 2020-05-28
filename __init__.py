@@ -93,7 +93,7 @@ class USBMusicSkill(CommonPlaySkill):
             # get the status of the connected usb device
             self.status = usbdev.isDeviceConnected()
             if self.status != self.prev_status:
-                LOG.info("Status Changed!")
+                #LOG.info("Status Changed!")
                 self.prev_status = self.status
                 if self.status:
                     LOG.info("Device Inserted!")
