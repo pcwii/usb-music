@@ -146,8 +146,8 @@ class USBMusicSkill(CommonPlaySkill):
                     }
                     new_library.append(info)
         # Todo announce how many songs where found
-        self.speak_dialog('scan.complete', expect_response=False)
         song_count = len(new_library)
+        self.speak_dialog('scan.complete', data={"count": str(song_count)}, expect_response=False)
         LOG.info("Added: " + str(song_count) + " to the library from the USB Device")
         return new_library
 
