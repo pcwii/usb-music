@@ -1,3 +1,4 @@
+# usb monitoring event
 from pyudev import Context, Monitor, MonitorObserver
 import os
 

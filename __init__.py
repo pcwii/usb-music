@@ -33,6 +33,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.path = ""
         self.usb_monitor = NewThread
         self.usbdevice = usbdev
+        self.observer = self.usbdevice.startListener()
         LOG.info("USB Music Skill Loaded!")
 
     def initialize(self):
@@ -89,14 +90,14 @@ class USBMusicSkill(CommonPlaySkill):
     def start_usb_thread(self, my_id, terminate):
         LOG.info("USB Monitoring Loop Started!")
         while not terminate():  # wait while this interval completes
-            time.sleep(1) # Todo make the polling time a variable or make it a separate thread
+            time.sleep(1)  # Todo make the polling time a variable or make it a separate thread
             # get the status of the connected usb device
             self.status = self.usbdevice.isDeviceConnected()
             LOG.info("Checking USB Device: " + str(self.status))
             if self.status != self.prev_status:
-                #LOG.info("Status Changed!")
+                LOG.info("USB Status Changed!")
                 self.prev_status = self.status
-                if self.status:
+                if self.status:  #Device inserted
                     LOG.info("Device Inserted!")
                     device = self.usbdevice.getDevData()
                     # get the path (currently set for Rpi, can be changed)
@@ -112,7 +113,7 @@ class USBMusicSkill(CommonPlaySkill):
                     self.speak_dialog('usb.removed', expect_response=False)
                     self.song_list = []
                     self.path = ""
-        #usbdev.stopListener(observer)
+        self.usbdevice.stopListener(self.observer)
 
     def create_library(self, usb_path):
         new_library = []
