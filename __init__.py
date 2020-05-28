@@ -160,13 +160,13 @@ class USBMusicSkill(CommonPlaySkill):
 
     def search_music_item(self, search_item, category="label"):
         # category options: label, artist, album
-        LOG.info('Continuing to search the library')
+        #LOG.info('Continuing to search the library')
         search_item = self.numeric_replace(search_item)
         found_list = []  # this is a dict of all the items found that match the search
         search_words = search_item.replace("-", "").lower().split()
         # check each movie in the list for strings that match all the words in the search
         for each_song in self.song_list:  # check each song in the list for the one we are looking for
-            LOG.info('Comparing to song: ' + str(each_song))
+            #LOG.info('Comparing to song: ' + str(each_song))
             item_name = each_song[category].replace("-", "")
             if len(item_name) > 0:
                 item_name = self.numeric_replace(item_name)
@@ -192,7 +192,7 @@ class USBMusicSkill(CommonPlaySkill):
                 else:
                     temp_list.append(info)
         found_list = temp_list
-        LOG.info('Filtered the following songs: ' + str(found_list))
+        #LOG.info('Filtered the following songs: ' + str(found_list))
         return found_list  # returns a dictionary of matched movies
 
     def CPS_start(self, phrase, data):
@@ -201,6 +201,8 @@ class USBMusicSkill(CommonPlaySkill):
             skill is selected (has the best match level)
         """
         LOG.info('USBMusicSkill, Playback received the following phrase and Data: ' + phrase + ' ' + str(data))
+        for each_song in data:
+            LOG.info("CPS Now Playing... " + each_song['label'] + " from location: " + each_song['location'])
         #url = data['track']
         #self.audioservice.play(url)  #
         pass
@@ -226,7 +228,7 @@ class USBMusicSkill(CommonPlaySkill):
                     LOG.info("---------------------------------")
                     self.speak_dialog('update.library', expect_response=False)
                     self.song_list = self.create_library(self.path)
-                    LOG.info(str(self.song_list))
+                    #LOG.info(str(self.song_list))
                 else:
                     # unmount the path
                     self.usbdevice.uMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
@@ -243,8 +245,8 @@ class USBMusicSkill(CommonPlaySkill):
                 if "mp3" in str(fileName):
                     song_path = str(root) + "/" + str(fileName)
                     audio = EasyID3(song_path)
-                    LOG.info("Found mp3: " + song_path + " With Data: " + str(audio))
-                    LOG.info("ID3 info Length: " + str(len(audio)))
+                    #LOG.info("Found mp3: " + song_path + " With Data: " + str(audio))
+                    #LOG.info("ID3 info Length: " + str(len(audio)))
                     try:
                         if len(audio) > 0:  # An ID3 tag found
                             if audio["title"] is None:
