@@ -246,18 +246,23 @@ class USBMusicSkill(CommonPlaySkill):
                     LOG.info("Found mp3: " + song_path + " With Data: " + str(audio))
                     LOG.info("ID3 info Length: " + str(len(audio)))
                     try:
-                        if audio["title"] is None:
+                        if len(audio) > 0:  # An ID3 tag found
+                            if audio["title"] is None:
+                                self.song_label = str(fileName)[:-4]
+                            else:
+                                self.song_label = audio["title"][0]
+                            if audio["artist"] is None:
+                                self.song_artist = ""
+                            else:
+                                self.song_artist = audio["artist"][0]
+                            if audio["album"] is None:
+                                self.song_album = ""
+                            else:
+                                self.song_album = audio["album"][0]
+                        else:  # There was no ID3 Tag found
                             self.song_label = str(fileName)[:-4]
-                        else:
-                            self.song_label = audio["title"][0]
-                        if audio["artist"] is None:
                             self.song_artist = ""
-                        else:
-                            self.song_artist = audio["artist"][0]
-                        if audio["album"] is None:
                             self.song_album = ""
-                        else:
-                            self.song_album = audio["album"][0]
                     except:
                         pass
                     info = {
