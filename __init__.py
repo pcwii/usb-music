@@ -272,6 +272,7 @@ class USBMusicSkill(CommonPlaySkill):
                         "album": self.song_album
                     }
                     new_library.append(info)
+                    LOG.info("Added to library: " + str(info))
         # Todo announce how many songs where found
         song_count = len(new_library)
         self.speak_dialog('scan.complete', data={"count": str(song_count)}, expect_response=False)
