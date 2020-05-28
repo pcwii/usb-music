@@ -100,8 +100,8 @@ class USBMusicSkill(CommonPlaySkill):
                 if self.status:  #Device inserted
                     LOG.info("Device Inserted!")
                     device = self.usbdevice.getDevData()
-                    # get the path (currently set for Rpi, can be changed)
-                    self.path = self.usbdevice.getMountPathUsbDevice()
+                    # mount the device and get the path
+                    self.path = self.usbdevice.getMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
                     LOG.info("Stat: " + str(self.status))
                     LOG.info("dev: " + str(device))
                     LOG.info("path: " + str(self.path))
@@ -109,6 +109,8 @@ class USBMusicSkill(CommonPlaySkill):
                     self.speak_dialog('update.library', expect_response=False)
                     self.song_list = self.create_library(self.path)
                 else:
+                    # unmount the path
+                    self.usbdevice.uMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
                     LOG.info("Device Removed!")
                     self.speak_dialog('usb.removed', expect_response=False)
                     self.song_list = []

@@ -88,8 +88,8 @@ def stopListener(observer):
 
 # returns the accesible path of the device on the Raspberry pi
 # you can change how the path gets calulated.
-def getMountPathUsbDevice():
-    sudoPassword = 'mycroft'
+def getMountPathUsbDevice(password):
+    sudoPassword = password #'mycroft'
     global USBDEV_DEVPATH
     if not isDeviceConnected() or USBDEV_DEVPATH == None:
         return None
@@ -111,5 +111,19 @@ def getMountPathUsbDevice():
         truePath = os.getcwd() + '/mp'
 
         return truePath
+
+    return None
+
+def uMountPathUsbDevice(password):
+    sudoPassword = password #'mycroft'
+    global USBDEV_DEVPATH
+    if USBDEV_DEVPATH == None:
+        return None
+
+    # check if the dev path exists
+    if os.path.exists(USBDEV_DEVPATH):
+        command = "umount " + USBDEV_DEVPATH + " mp"
+        p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
+        # unmount the dev path to the folder
 
     return None
