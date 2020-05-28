@@ -1,2 +1,4 @@
-I have completed collecting the songs on the USB
-The USB library has been updated
+I have located {{count}}, songs on the USB
+I have added, {{count}} songs to the USB library
+The USB library has been updated with {{count}}, songs
+{{count}}, songs have been added to the USB library
