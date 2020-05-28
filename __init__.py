@@ -160,12 +160,13 @@ class USBMusicSkill(CommonPlaySkill):
 
     def search_music_item(self, search_item, category="label"):
         # category options: label, artist, album
-        LOG.info('Continuing to search the library for')
+        LOG.info('Continuing to search the library')
         search_item = self.numeric_replace(search_item)
         found_list = []  # this is a dict of all the items found that match the search
         search_words = search_item.replace("-", "").lower().split()
         # check each movie in the list for strings that match all the words in the search
         for each_song in self.song_list:  # check each song in the list for the one we are looking for
+            LOG.info('Comparing to song: ' + str(each_song))
             item_name = each_song[category].replace("-", "")
             if len(item_name) > 0:
                 item_name = self.numeric_replace(item_name)
