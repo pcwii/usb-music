@@ -188,7 +188,7 @@ class USBMusicSkill(CommonPlaySkill):
                 "label": each_song['label'],
                 "album": each_song['album'],
                 "artist": each_song['artist']
-            }
+            }  # Todo this is missing in the kodi skill????
             song_title = str(each_song['label'])
             if song_title not in str(temp_list):
                 temp_list.append(info)
