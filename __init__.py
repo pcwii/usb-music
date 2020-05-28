@@ -93,7 +93,7 @@ class USBMusicSkill(CommonPlaySkill):
             time.sleep(1)  # Todo make the polling time a variable or make it a separate thread
             # get the status of the connected usb device
             self.status = self.usbdevice.isDeviceConnected()
-            LOG.info("Checking USB Device: " + str(self.status))
+            # LOG.info("Checking USB Device: " + str(self.status))
             if self.status != self.prev_status:
                 LOG.info("USB Status Changed!")
                 self.prev_status = self.status
