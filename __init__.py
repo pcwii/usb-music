@@ -89,7 +89,7 @@ class USBMusicSkill(CommonPlaySkill):
         LOG.info("USB Monitoring Loop Started!")
         while not terminate():  # wait while this interval completes
             time.sleep(1) # Todo make the polling time a variable or make it a separate thread
-            #LOG.info("Checking USB Device")
+            LOG.info("Checking USB Device")
             # get the status of the connected usb device
             self.status = usbdev.isDeviceConnected()
             if self.status != self.prev_status:
