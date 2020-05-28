@@ -157,6 +157,7 @@ class USBMusicSkill(CommonPlaySkill):
 
     def search_music_item(self, search_item, category="label"):
         # category options: label, artist, album
+        LOG.info('Continuing to search the library for')
         search_item = self.numeric_replace(search_item)
         found_list = []  # this is a dict of all the items found that match the search
         search_words = search_item.replace("-", "").lower().split()
@@ -174,6 +175,7 @@ class USBMusicSkill(CommonPlaySkill):
                         "artist": each_song['artist']
                     }
                     found_list.append(info)
+        LOG.info('Found the following songs: ' + str(found_list))
         # remove duplicates
         temp_list = []  # this is a dict
         for each_song in found_list:
@@ -186,6 +188,7 @@ class USBMusicSkill(CommonPlaySkill):
                 else:
                     temp_list.append(info)
         found_list = temp_list
+        LOG.info('Filtered the following songs: ' + str(found_list))
         return found_list  # returns a dictionary of matched movies
 
     def CPS_start(self, phrase, data):
