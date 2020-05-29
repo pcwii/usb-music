@@ -95,19 +95,19 @@ def getMountPathUsbDevice(password):
     global USBDEV_DEVPATH
     if not isDeviceConnected() or USBDEV_DEVPATH == None:
         return None
-
     # check if the dev path exists
     if os.path.exists(USBDEV_DEVPATH):
-
         # create a mount directory
         if not os.path.exists('usb-music'):
             os.makedirs('usb-music')
-        #"mount", "-t", "auto"
-        command = "mount -t auto " + USBDEV_DEVPATH + " usb-music"
-        p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
 
-        # mount the dev path to the folder
-        # os.system("mount " + USBDEV_DEVPATH + " usb-music")
+        command = "sudo mount -t auto " + USBDEV_DEVPATH + " usb-music"
+        #p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
+
+        proc = subprocess.Popen(command,
+                               shell=True, stdin=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
 
         # return the path to the folder from root
         truePath = os.getcwd() + '/usb-music'
@@ -124,8 +124,14 @@ def uMountPathUsbDevice(password):
 
     # check if the dev path exists
     if os.path.exists(USBDEV_DEVPATH):
-        command = "umount " + USBDEV_DEVPATH + " usb-music"
-        p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
+        command = "sudo umount -f " + USBDEV_DEVPATH + " usb-music"
+
+        proc = subprocess.Popen(command,
+                               shell=True, stdin=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+
+        #p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
         # unmount the dev path to the folder
 
     return None
