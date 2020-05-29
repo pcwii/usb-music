@@ -104,12 +104,12 @@ def getMountPathUsbDevice(password):
                 time.sleep(1)
         #command = "sudo mount -t auto " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
         command = "sudo mount -t auto /dev/sdb1 /home/pi/mycroft-core/usb-music"
-        #p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
+        p = os.system(command)
 
-        proc = subprocess.Popen(command,
-                               shell=True, stdin=subprocess.PIPE,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
+        #proc = subprocess.Popen(command,
+        #                       shell=True, stdin=subprocess.PIPE,
+        #                       stdout=subprocess.PIPE,
+        #                       stderr=subprocess.PIPE)
 
         # return the path to the folder from root
         truePath = os.getcwd() + '/usb-music'
