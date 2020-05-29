@@ -102,7 +102,7 @@ def getMountPathUsbDevice(password):
             os.makedirs('usb-music')
             while not os.path.exists('usb-music'):
                 time.sleep(1)
-        command = "sudo mount -t auto " + USBDEV_DEVPATH + " usb-music"
+        command = "sudo mount -t auto " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
         #p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
 
         proc = subprocess.Popen(command,
@@ -124,7 +124,7 @@ def uMountPathUsbDevice(password):
         return None
     # check if the dev path exists
     if os.path.exists(USBDEV_DEVPATH):
-        command = "sudo umount -f " + USBDEV_DEVPATH + " usb-music"
+        command = "sudo umount -f " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
 
         proc = subprocess.Popen(command,
                                shell=True, stdin=subprocess.PIPE,
