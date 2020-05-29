@@ -100,7 +100,7 @@ def getMountPathUsbDevice(password):
         # create a mount directory
         if not os.path.exists('usb-music'):
             os.makedirs('usb-music')
-
+            time.sleep(1.5)
         command = "sudo mount -t auto " + USBDEV_DEVPATH + " usb-music"
         #p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
 
@@ -121,7 +121,6 @@ def uMountPathUsbDevice(password):
     global USBDEV_DEVPATH
     if USBDEV_DEVPATH == None:
         return None
-
     # check if the dev path exists
     if os.path.exists(USBDEV_DEVPATH):
         command = "sudo umount -f " + USBDEV_DEVPATH + " usb-music"
@@ -130,6 +129,9 @@ def uMountPathUsbDevice(password):
                                shell=True, stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
+        time.sleep(1.5)
+        if os.path.exists('usb-music'):
+            os.removedirs('usb-music')
 
         #p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
         # unmount the dev path to the folder
