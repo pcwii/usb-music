@@ -227,7 +227,8 @@ class USBMusicSkill(CommonPlaySkill):
                     LOG.info("Device Inserted!")
                     device = self.usbdevice.getDevData()
                     # mount the device and get the path
-                    self.path = self.usbdevice.getMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
+                    #self.path = self.usbdevice.getMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
+                    self.usbdevice.mountPartition()
                     LOG.info("Stat: " + str(self.status))
                     LOG.info("dev: " + str(device))
                     LOG.info("path: " + str(self.path))
@@ -237,7 +238,8 @@ class USBMusicSkill(CommonPlaySkill):
                     #LOG.info(str(self.song_list))
                 else:
                     # unmount the path
-                    self.usbdevice.uMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
+                    #self.usbdevice.uMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
+                    self.usbdevice.unmountPartition()
                     LOG.info("Device Removed!")
                     self.speak_dialog('usb.removed', expect_response=False)
                     self.song_list = []

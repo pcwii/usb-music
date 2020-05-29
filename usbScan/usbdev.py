@@ -1,6 +1,8 @@
 # usb monitoring event
 from pyudev import Context, Monitor, MonitorObserver
 import os
+import subprocess
+import time
 
 # some globals for the device details
 USBDEV_UUID = None
@@ -98,17 +100,17 @@ def getMountPathUsbDevice(password):
     if os.path.exists(USBDEV_DEVPATH):
 
         # create a mount directory
-        if not os.path.exists('mp'):
-            os.makedirs('mp')
+        if not os.path.exists('usb-music'):
+            os.makedirs('usb-music')
         #"mount", "-t", "auto"
-        command = "mount -t auto" + USBDEV_DEVPATH + " mp"
+        command = "mount -t auto" + USBDEV_DEVPATH + " usb-music"
         p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
 
         # mount the dev path to the folder
-        # os.system("mount " + USBDEV_DEVPATH + " mp")
+        # os.system("mount " + USBDEV_DEVPATH + " usb-music")
 
         # return the path to the folder from root
-        truePath = os.getcwd() + '/mp'
+        truePath = os.getcwd() + '/usb-music'
 
         return truePath
 
@@ -122,8 +124,38 @@ def uMountPathUsbDevice(password):
 
     # check if the dev path exists
     if os.path.exists(USBDEV_DEVPATH):
-        command = "umount " + USBDEV_DEVPATH + " mp"
+        command = "umount " + USBDEV_DEVPATH + " usb-music"
         p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
         # unmount the dev path to the folder
 
     return None
+
+def mountPartition():
+    if USBDEV_DEVPATH == None:
+        return None
+    # check if the dev path exists
+    if os.path.exists(USBDEV_DEVPATH):
+        command = "mount -t auto " + USBDEV_DEVPATH + " usb-music"
+        p = subprocess.Popen(command,
+                             stderr=subprocess.STDOUT,
+                             stdout=subprocess.PIPE)
+    time.sleep(1.5)
+ #   if not os.path.ismount(mnt):
+ #       out, err = p.communicate()
+ #       raise IOError(out.strip('\n'))
+
+def unmountPartition():
+    if USBDEV_DEVPATH == None:
+        return None
+    # check if the dev path exists
+    if os.path.exists(USBDEV_DEVPATH):
+        command = "umount" + USBDEV_DEVPATH + " usb-music"
+        p = subprocess.Popen(command,
+                             stderr=subprocess.STDOUT,
+                             stdout=subprocess.PIPE)
+    p.wait()
+    time.sleep(1.5)
+    out, err = p.communicate()
+    # If it's still mounted raise an IOError!
+#    if os.path.ismount(mnt):
+#        raise IOError(err)
