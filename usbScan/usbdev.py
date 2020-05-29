@@ -100,7 +100,8 @@ def getMountPathUsbDevice(password):
         # create a mount directory
         if not os.path.exists('usb-music'):
             os.makedirs('usb-music')
-            time.sleep(1.5)
+            while not os.path.exists('usb-music'):
+                time.sleep(1)
         command = "sudo mount -t auto " + USBDEV_DEVPATH + " usb-music"
         #p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
 
