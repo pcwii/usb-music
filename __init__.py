@@ -236,7 +236,7 @@ class USBMusicSkill(CommonPlaySkill):
                     LOG.info("Device Inserted!")
                     device = self.usbdevice.getDevData()
                     # mount the device and get the path
-                    self.path = self.usbdevice.getMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
+                    self.path = self.usbdevice.getMountPathUsbDevice()
                     LOG.info("Stat: " + str(self.status))
                     LOG.info("dev: " + str(device))
                     LOG.info("path: " + str(self.path))
@@ -247,7 +247,7 @@ class USBMusicSkill(CommonPlaySkill):
                     #LOG.info(str(self.song_list))
                 else:
                     # unmount the path
-                    self.usbdevice.uMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
+                    self.usbdevice.uMountPathUsbDevice()
                     LOG.info("Device Removed!")
                     # Todo remove context "USB" so all play requests start with this skill
                     self.speak_dialog('usb.removed', expect_response=False)
@@ -305,11 +305,11 @@ class USBMusicSkill(CommonPlaySkill):
         if self.usbdevice.isDeviceConnected():
             device = self.usbdevice.getDevData()
             # mount the device and get the path
-            self.path = self.usbdevice.getMountPathUsbDevice('mycroft')  # todo add sudo password to websettings
+            self.path = self.usbdevice.getMountPathUsbDevice()
             self.speak_dialog('update.library', expect_response=False)
             self.song_list = self.create_library(self.path)
         else:
-            self.usbdevice.uMountPathUsbDevice('mycroft')  # todo add sudo password to websettings
+            self.usbdevice.uMountPathUsbDevice()
             LOG.info("Device Removed!")
             # Play Music Added here
             LOG.info("USB Device Not Detected")
