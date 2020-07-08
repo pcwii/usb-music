@@ -91,8 +91,8 @@ def stopListener(observer):
 
 # returns the accesible path of the device on the Raspberry pi
 # you can change how the path gets calulated.
-def getMountPathUsbDevice(password):
-    sudoPassword = password #'mycroft'
+def getMountPathUsbDevice():
+    # sudoPassword = password #'mycroft'
     global USBDEV_DEVPATH
     if not isDeviceConnected() or USBDEV_DEVPATH == None:
         return None
@@ -115,8 +115,8 @@ def getMountPathUsbDevice(password):
         return truePath
     return None
 
-def uMountPathUsbDevice(password):
-    sudoPassword = password #'mycroft'
+def uMountPathUsbDevice():
+    #sudoPassword = password #'mycroft'
     global USBDEV_DEVPATH
     if USBDEV_DEVPATH == None:
         return None
