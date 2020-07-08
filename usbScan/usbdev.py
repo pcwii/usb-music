@@ -135,32 +135,32 @@ def uMountPathUsbDevice(password):
 
     return None
 
-def mountPartition():
-    if USBDEV_DEVPATH == None:
-        return None
-    # check if the dev path exists
-    if os.path.exists(USBDEV_DEVPATH):
-        command = "mount -t auto " + USBDEV_DEVPATH + " usb-music"
-        p = subprocess.Popen(command,
-                             stderr=subprocess.STDOUT,
-                             stdout=subprocess.PIPE)
-    time.sleep(1.5)
- #   if not os.path.ismount(mnt):
- #       out, err = p.communicate()
- #       raise IOError(out.strip('\n'))
+#def mountPartition():
+#    if USBDEV_DEVPATH == None:
+#        return None
+#    # check if the dev path exists
+#    if os.path.exists(USBDEV_DEVPATH):
+#        command = "mount -t auto " + USBDEV_DEVPATH + " usb-music"
+#        p = subprocess.Popen(command,
+#                             stderr=subprocess.STDOUT,
+#                             stdout=subprocess.PIPE)
+#   time.sleep(1.5)
+#   if not os.path.ismount(mnt):
+#       out, err = p.communicate()
+#       raise IOError(out.strip('\n'))
 
-def unmountPartition():
-    if USBDEV_DEVPATH == None:
-        return None
-    # check if the dev path exists
-    if os.path.exists(USBDEV_DEVPATH):
-        command = "umount " + USBDEV_DEVPATH + " usb-music"
-        p = subprocess.Popen(command,
-                             stderr=subprocess.STDOUT,
-                             stdout=subprocess.PIPE)
-    p.wait()
-    time.sleep(1.5)
-    out, err = p.communicate()
-    # If it's still mounted raise an IOError!
+#def unmountPartition():
+#    if USBDEV_DEVPATH == None:
+#        return None
+#    # check if the dev path exists
+#    if os.path.exists(USBDEV_DEVPATH):
+#        command = "umount " + USBDEV_DEVPATH + " usb-music"
+#        p = subprocess.Popen(command,
+#                             stderr=subprocess.STDOUT,
+#                             stdout=subprocess.PIPE)
+#    p.wait()
+#    time.sleep(1.5)
+#    out, err = p.communicate()
+#    # If it's still mounted raise an IOError!
 #    if os.path.ismount(mnt):
 #        raise IOError(err)
