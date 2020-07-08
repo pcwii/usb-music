@@ -104,8 +104,8 @@ def getMountPathUsbDevice(password):
             while not os.path.exists('usb-music'):
                 # wait for directory to be created
                 time.sleep(1)
-        #command = "sudo mount -t auto " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
-        command = "sudo mount -t auto /dev/sdb1 /home/pi/mycroft-core/usb-music"
+        command = "sudo mount -t auto " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
+        #command = "sudo mount -t auto /dev/sdb1 /home/pi/mycroft-core/usb-music"
         p = os.system(command)
         # return the path to the folder from root
         truePath = os.getcwd() + '/usb-music'
@@ -120,8 +120,8 @@ def uMountPathUsbDevice(password):
         return None
     # check if the dev path exists
     if os.path.exists(USBDEV_DEVPATH):
-        #command = "sudo umount -f " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
-        command = "sudo mount -f /dev/sdb1 /home/pi/mycroft-core/usb-music"
+        command = "sudo umount -f " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
+        #command = "sudo mount -f /dev/sdb1 /home/pi/mycroft-core/usb-music"
         proc = subprocess.Popen(command,
                                shell=True, stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
