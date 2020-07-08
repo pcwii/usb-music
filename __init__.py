@@ -302,12 +302,18 @@ class USBMusicSkill(CommonPlaySkill):
                     require("LibraryKeyword").build())
     def handle_update_library_intent(self, message):
         LOG.info("Called Update Library Intent")
-        if self.status:
+        if self.usbdevice.isDeviceConnected():
+            device = self.usbdevice.getDevData()
+            # mount the device and get the path
+            self.path = self.usbdevice.getMountPathUsbDevice('mycroft')  # todo add sudo password to websettings
             self.speak_dialog('update.library', expect_response=False)
             self.song_list = self.create_library(self.path)
         else:
+            self.usbdevice.uMountPathUsbDevice('mycroft')  # todo add sudo password to websettings
+            LOG.info("Device Removed!")
             # Play Music Added here
             LOG.info("USB Device Not Detected")
+    # Todo: Add an unmount / release command
 
     def stop(self):
         LOG.info('Stopping USB Monitor Thread!')
