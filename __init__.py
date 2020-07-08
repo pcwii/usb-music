@@ -216,8 +216,8 @@ class USBMusicSkill(CommonPlaySkill):
         LOG.info('USBMusicSkill, Playback received the following phrase and Data: ' + phrase + ' ' + str(data))
         for each_song in data:
             LOG.info("CPS Now Playing... " + each_song['label'] + " from location: " + each_song['location'])
-        #url = data['track']
-        #self.audioservice.play(url)  #
+        url = data['track']
+        self.audioservice.play(url)  #
         pass
 
     def start_usb_thread(self, my_id, terminate):
