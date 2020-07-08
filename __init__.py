@@ -5,6 +5,7 @@ from mycroft.util.log import LOG
 
 import threading
 from importlib import reload
+import sys
 
 from .usbScan import usbdev
 
