@@ -205,7 +205,6 @@ class USBMusicSkill(CommonPlaySkill):
                 else:
                     temp_list.append(info)
         found_list = temp_list
-        #LOG.info('Filtered the following songs: ' + str(found_list))
         return found_list  # returns a dictionary of matched movies
 
     def CPS_start(self, phrase, data):
@@ -298,8 +297,7 @@ class USBMusicSkill(CommonPlaySkill):
         LOG.info("Added: " + str(song_count) + " to the library from the USB Device")
         return new_library
 
-    @intent_handler(IntentBuilder('UpdateLibraryIntent').require("UpdateKeyword").require("USBKeyword").
-                    require("LibraryKeyword").build())
+    @intent_handler(IntentBuilder('').require("UpdateKeyword").require("USBKeyword").require("LibraryKeyword"))
     def handle_update_library_intent(self, message):
         LOG.info("Called Update Library Intent")
         if self.usbdevice.isDeviceConnected():
@@ -310,10 +308,19 @@ class USBMusicSkill(CommonPlaySkill):
             self.song_list = self.create_library(self.path)
         else:
             self.usbdevice.uMountPathUsbDevice()
-            LOG.info("Device Removed!")
             # Play Music Added here
             LOG.info("USB Device Not Detected")
     # Todo: Add an unmount / release command
+
+    @intent_handler(IntentBuilder('').require("RemoveKeyword").require("USBKeyword"))
+    def handle_remove_usb_intent(self, message):
+        self.usbdevice.uMountPathUsbDevice()
+        LOG.info("Device Removed!")
+
+    @intent_handler(IntentBuilder('').require("StartKeyword").require("USBKeyword").require('ScanKeyword'))
+    def handle_start_usb_intent(self, message):
+        LOG.info("Scan would be started if stopped!")
+
 
     def stop(self):
         LOG.info('Stopping USB Monitor Thread!')
