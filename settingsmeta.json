@@ -1,0 +1,18 @@
+{
+    "name": "USB Music Skill",
+    "skillMetadata": {
+        "sections": [
+            {
+                "name": "Settings",
+                "fields": [
+                    {
+                        "name": "Skill Enabled",
+                        "type": "checkbox",
+                        "label": "Enable / Disable?",
+                        "value": "true"
+                    }
+                ]
+            }
+        ]
+    }
+}

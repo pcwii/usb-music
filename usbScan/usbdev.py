@@ -3,6 +3,7 @@ from pyudev import Context, Monitor, MonitorObserver
 import os
 import subprocess
 import time
+from mycroft.util.log import LOG
 
 # some globals for the device details
 USBDEV_UUID = None
@@ -101,21 +102,15 @@ def getMountPathUsbDevice(password):
         if not os.path.exists('usb-music'):
             os.makedirs('usb-music')
             while not os.path.exists('usb-music'):
+                # wait for directory to be created
                 time.sleep(1)
         #command = "sudo mount -t auto " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
         command = "sudo mount -t auto /dev/sdb1 /home/pi/mycroft-core/usb-music"
         p = os.system(command)
-
-        #proc = subprocess.Popen(command,
-        #                       shell=True, stdin=subprocess.PIPE,
-        #                       stdout=subprocess.PIPE,
-        #                       stderr=subprocess.PIPE)
-
         # return the path to the folder from root
         truePath = os.getcwd() + '/usb-music'
-
+        LOG.info('Created mount path: ' + str(truePath))
         return truePath
-
     return None
 
 def uMountPathUsbDevice(password):

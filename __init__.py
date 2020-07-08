@@ -4,6 +4,7 @@ from mycroft.skills.core import intent_handler, intent_file_handler
 from mycroft.util.log import LOG
 
 import threading
+from importlib import reload
 
 from .usbScan import usbdev
 
@@ -12,6 +13,11 @@ import time
 import os
 from os.path import dirname
 from mutagen.easyid3 import EasyID3
+
+for each_module in sys.modules:
+    if "usbScan" in each_module:
+        LOG.info("Attempting to reload usbScan Module: " + str(each_module))
+        reload(sys.modules[each_module])
 
 
 class NewThread:
@@ -214,33 +220,35 @@ class USBMusicSkill(CommonPlaySkill):
         pass
 
     def start_usb_thread(self, my_id, terminate):
+        """
+        This thread monitors the USB port for an insertion / removal event
+        """
         LOG.info("USB Monitoring Loop Started!")
         while not terminate():  # wait while this interval completes
             time.sleep(1)  # Todo make the polling time a variable or make it a separate thread
             # get the status of the connected usb device
             self.status = self.usbdevice.isDeviceConnected()
-            # LOG.info("Checking USB Device: " + str(self.status))
             if self.status != self.prev_status:
                 LOG.info("USB Status Changed!")
                 self.prev_status = self.status
-                if self.status:  #Device inserted
+                if self.status:  # Device inserted
                     LOG.info("Device Inserted!")
                     device = self.usbdevice.getDevData()
                     # mount the device and get the path
                     self.path = self.usbdevice.getMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
-                    #self.usbdevice.mountPartition()
                     LOG.info("Stat: " + str(self.status))
                     LOG.info("dev: " + str(device))
                     LOG.info("path: " + str(self.path))
                     LOG.info("---------------------------------")
                     self.speak_dialog('update.library', expect_response=False)
+                    # Todo add context "USB" so all play requests start with this skill
                     self.song_list = self.create_library(self.path)
                     #LOG.info(str(self.song_list))
                 else:
                     # unmount the path
                     self.usbdevice.uMountPathUsbDevice('mycroft')  #todo add sudo password to websettings
-                    #self.usbdevice.unmountPartition()
                     LOG.info("Device Removed!")
+                    # Todo remove context "USB" so all play requests start with this skill
                     self.speak_dialog('usb.removed', expect_response=False)
                     self.song_list = []
                     self.path = ""
