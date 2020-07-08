@@ -310,6 +310,7 @@ class USBMusicSkill(CommonPlaySkill):
             LOG.info("USB Device Not Detected")
 
     def stop(self):
+        LOG.info('Stopping USB Monitor Thread!')
         self.halt_usb_monitor_thread()
         pass
 
