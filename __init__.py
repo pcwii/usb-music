@@ -284,6 +284,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.usbdevice.stopListener(self.observer)
 
     def play_all(self, library):
+        LOG.info('Automatically playing the USB Device')
         tracklist = []
         for each_song in library:
             LOG.info("CPS Now Playing... " + each_song['label'] + " from location: " + each_song['location'])
