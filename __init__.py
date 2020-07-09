@@ -44,7 +44,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.usb_monitor = NewThread
         self.usbdevice = usbdev
         self.observer = self.usbdevice.startListener()
-        self.audio_service = AudioService(self.bus)
+        self.audio_service = AudioService()
         self.audio_state = 'stopped'  # 'playing', 'stopped'
         LOG.info("USB Music Skill Loaded!")
 
