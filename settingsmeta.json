@@ -1,0 +1,18 @@
+{
+    "name": "USB-Music",
+    "skillMetadata": {
+        "sections": [
+            {
+                "name": "Settings",
+                "fields": [
+                    {
+                        "name": "Auto_Play",
+                        "type": "checkbox",
+                        "label": "Enable / Disable AutoPlay?",
+                        "value": "false"
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -41,6 +41,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.song_artist = ""
         self.song_label = ""
         self.song_album = ""
+        self.Auto_Play = False
         self.prev_status = False
         self.status = False
         self.path = ""
@@ -56,6 +57,13 @@ class USBMusicSkill(CommonPlaySkill):
         self.audio_service = AudioService(self.bus)
         LOG.info("USB Music Skill Initialized!")
         self.init_usb_monitor_thread()
+        self.settings_change_callback = self.on_websettings_changed
+        self.on_websettings_changed()
+
+
+    def on_websettings_changed(self):  # called when updating mycroft home page
+        self.Auto_Play = self.settings.get("Auto_Play", False)  # used to enable / disable Auto_Play
+
 
     def init_usb_monitor_thread(self):  # creates the workout thread
         self.usb_monitor.idStop = False
@@ -259,7 +267,10 @@ class USBMusicSkill(CommonPlaySkill):
                     self.speak_dialog('update.library', expect_response=False)
                     # Todo add context "USB" so all play requests start with this skill
                     self.song_list = self.create_library(self.path)
+                    if self.Auto_Play:
+                        self.play_all(self.song_list)
                 else:
+                    self.audio_service.stop()
                     # unmount the path
                     self.usbdevice.uMountPathUsbDevice()
                     LOG.info("Device Removed!")
@@ -267,7 +278,21 @@ class USBMusicSkill(CommonPlaySkill):
                     self.speak_dialog('usb.removed', expect_response=False)
                     self.song_list = []
                     self.path = ""
+                    self.on_websettings_changed()
         self.usbdevice.stopListener(self.observer)
+
+    def play_all(self, library):
+        tracklist = []
+        for each_song in library:
+            LOG.info("CPS Now Playing... " + each_song['label'] + " from location: " + each_song['location'])
+            url = each_song['location']
+            tracklist.append(url)
+        LOG.info(str(tracklist))
+        self.speak_dialog('now.playing')
+        wait_while_speaking()
+        self.audio_service.play(tracklist)
+        self.audio_state = 'playing'
+
 
     def create_library(self, usb_path):
         new_library = []
