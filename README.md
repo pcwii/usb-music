@@ -7,7 +7,7 @@ will scan the device for MP3 music and add it to a temporary library that you ca
 ## AutoPlay
 If autoplay is enabled in the websettings then the usb music will begin playing imediatly when inserted.
 Unplugging the usb will automatically stop and unmount the device.
-# <img src='/images/settings.png' card_color='#40DBB0' width='250' height='250' style='vertical-align:bottom'/>
+# <img src='/images/settings.png' card_color='#40DBB0' width='355' height='190' style='vertical-align:bottom'/>
 ## Command Examples
 * "play the artist elvis Presley"
 * "play all shook up"
