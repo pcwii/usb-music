@@ -20,6 +20,7 @@ import os
 from os.path import dirname
 from mutagen.easyid3 import EasyID3
 
+
 for each_module in sys.modules:
     if "usbScan" in each_module:
         LOG.info("Attempting to reload usbScan Module: " + str(each_module))
@@ -56,6 +57,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.load_data_files(dirname(__file__))
         self.audio_service = AudioService(self.bus)
         LOG.info("USB Music Skill Initialized!")
+        self.halt_usb_monitor_thread()
         self.init_usb_monitor_thread()
         self.settings_change_callback = self.on_websettings_changed
         self.on_websettings_changed()
