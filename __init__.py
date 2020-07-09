@@ -3,6 +3,7 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import intent_handler, intent_file_handler
 from mycroft.util.log import LOG
 from mycroft.audio.services.vlc import VlcService
+from mycroft.audio import wait_while_speaking
 
 import threading
 from importlib import reload
@@ -222,10 +223,10 @@ class USBMusicSkill(CommonPlaySkill):
             tracklist.append(url)
         LOG.info(str(tracklist))
         self.mediaplayer.add_list(tracklist)
+        self.audio_state = 'playing'
+        self.speak_dialog('now.playing')
+        wait_while_speaking()
         self.mediaplayer.play()
-
-
-
         pass
 
     def start_usb_thread(self, my_id, terminate):
@@ -334,6 +335,14 @@ class USBMusicSkill(CommonPlaySkill):
 
 
     def stop(self):
+        if self.audio_state == 'playing':
+            self.mediaplayer.stop()
+            self.mediaplayer.clear_list()
+            LOG.debug('Stopping stream')
+        self.audio_state = 'stopped'
+        return True
+
+
         #LOG.info('Stopping USB Monitor Thread!')
         #self.halt_usb_monitor_thread()
         pass
