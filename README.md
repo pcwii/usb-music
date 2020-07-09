@@ -1,17 +1,20 @@
-# <img src='https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/music.svg' card_color='#40DBB0' width='50' height='50' style='vertical-align:bottom'/> USB Music
+# <img src='/usbmusic.png' card_color='#40DBB0' width='50' height='50' style='vertical-align:bottom'/> USB Music
 Play Music from a USB device with Mycroft.ai
 
 ## About 
 Play local music by inserting a USB drive into your Mycroft device. Upon Inserting a USB Device Mycroft
-will scan the device for MP3 music and add it to a temporary library that you can play by asking. 
-## Examples
+will scan the device for MP3 music and add it to a temporary library that you can play. 
+## AutoPlay
+If autoplay is enabled in the websettings then the usb music will begin playing imediatly when inserted.
+Unplugging the usb will automatically stop and unmount the device.
+## Command Examples
 * "play the artist elvis Presley"
 * "play all shook up"
 * "play the song blue suede shoes"
 * "play the album appeal to reason"
 
 ## Credits 
-* PCWii (20200526 Covid-19 Project)
+* PCWii (20200709 Covid-19 Project)
 * Some elements borrowed from https://github.com/Preston-Sundar/RaspberryPi-Pyudev-Usb-Storage-Detector/blob/master/usbdev.py
 ## Category
 **Media**
@@ -24,6 +27,8 @@ Tested on platform_picroft (others untested)
 - [mutagen](https://mutagen.readthedocs.io/en/latest/)
 - [pyudev](https://pyudev.readthedocs.io/en/latest/)
 ## Installation Notes
-- SSH and run: msm install https://github.com/pcwii/usb-music.git
+- SSH and run: <b>msm install https://github.com/pcwii/usb-music.git</b>
 ## Todo
-- Add USB Polling interval to Mycroft.ai web interface (currently 1 second)
+- Add "next/previous" commands
+- Add "random" selection
+- ...?
