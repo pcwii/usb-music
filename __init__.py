@@ -1,9 +1,12 @@
+from unittest import TestCase, mock
+
 from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import intent_handler, intent_file_handler
 from mycroft.util.log import LOG
 from mycroft.skills.audioservice import AudioService
 from mycroft.audio import wait_while_speaking
+
 
 import threading
 from importlib import reload
@@ -33,6 +36,7 @@ class USBMusicSkill(CommonPlaySkill):
 
     def __init__(self):
         super(USBMusicSkill, self).__init__('USBMusicSkill')
+        self.bus = mock.Mock(name='bus')
         self.song_list = []
         self.prev_status = False
         self.song_artist = ""
@@ -44,7 +48,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.usb_monitor = NewThread
         self.usbdevice = usbdev
         self.observer = self.usbdevice.startListener()
-        self.audio_service = AudioService()
+        self.audio_service = AudioService(self.bus)
         self.audio_state = 'stopped'  # 'playing', 'stopped'
         LOG.info("USB Music Skill Loaded!")
 
