@@ -65,6 +65,7 @@ class USBMusicSkill(CommonPlaySkill):
 
     def on_websettings_changed(self):  # called when updating mycroft home page
         self.Auto_Play = self.settings.get("Auto_Play", False)  # used to enable / disable Auto_Play
+        LOG.info('USB-Music Settings Changed, AutoPlay now: ' + str(self.Auto_Play))
 
 
     def init_usb_monitor_thread(self):  # creates the workout thread
