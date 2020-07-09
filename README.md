@@ -1,4 +1,4 @@
-# <img src='/usbmusic.png' card_color='#40DBB0' width='50' height='50' style='vertical-align:bottom'/> USB Music
+# <img src='/images/usbmusic.png' card_color='#40DBB0' width='50' height='50' style='vertical-align:bottom'/> USB Music
 Play Music from a USB device with Mycroft.ai
 
 ## About 
@@ -7,6 +7,7 @@ will scan the device for MP3 music and add it to a temporary library that you ca
 ## AutoPlay
 If autoplay is enabled in the websettings then the usb music will begin playing imediatly when inserted.
 Unplugging the usb will automatically stop and unmount the device.
+# <img src='/images/settings.png' card_color='#40DBB0' width='250' height='250' style='vertical-align:bottom'/>
 ## Command Examples
 * "play the artist elvis Presley"
 * "play all shook up"
