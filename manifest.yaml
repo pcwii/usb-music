@@ -2,3 +2,4 @@ dependencies:
   python:
     - mutagen
     - pyudev
+  apt-get: vlc-bin vlc-plugin-base
