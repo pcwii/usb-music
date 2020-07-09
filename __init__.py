@@ -246,6 +246,8 @@ class USBMusicSkill(CommonPlaySkill):
                 LOG.info("USB Status Changed!")
                 self.prev_status = self.status
                 if self.status:  # Device inserted
+                    # remove any existing mount points
+                    self.usbdevice.uMountPathUsbDevice()
                     LOG.info("Device Inserted!")
                     device = self.usbdevice.getDevData()
                     # mount the device and get the path
