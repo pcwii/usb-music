@@ -32,4 +32,5 @@ Tested on platform_picroft (others untested)
 ## Todo
 - Add "next/previous" commands
 - Add "random" selection
+- Add thumbnails for display
 - ...?
