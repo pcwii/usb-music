@@ -2,7 +2,7 @@ from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import intent_handler, intent_file_handler
 from mycroft.util.log import LOG
-from mycroft.audio.services.vlc import VlcService
+from mycroft.skills.audioservice import AudioService
 from mycroft.audio import wait_while_speaking
 
 import threading
@@ -44,7 +44,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.usb_monitor = NewThread
         self.usbdevice = usbdev
         self.observer = self.usbdevice.startListener()
-        self.mediaplayer = VlcService(config={'low_volume': 10, 'duck': True})
+        self.audio_service = AudioService(self.bus)
         self.audio_state = 'stopped'  # 'playing', 'stopped'
         LOG.info("USB Music Skill Loaded!")
 
@@ -222,17 +222,17 @@ class USBMusicSkill(CommonPlaySkill):
             #self.audioservice.play(url)  #
             tracklist.append(url)
         LOG.info(str(tracklist))
-        self.mediaplayer.add_list(tracklist)
-        self.audio_state = 'playing'
         self.speak_dialog('now.playing')
         wait_while_speaking()
-        self.mediaplayer.play()
+        self.audio_service.play(tracklist)
+        self.audio_state = 'playing'
         pass
 
     def start_usb_thread(self, my_id, terminate):
         """
         This thread monitors the USB port for an insertion / removal event
         """
+        # Todo automatically play when stick is inserted
         LOG.info("USB Monitoring Loop Started!")
         while not terminate():  # wait while this interval completes
             time.sleep(1)  # Todo make the polling time a variable or make it a separate thread
@@ -336,8 +336,7 @@ class USBMusicSkill(CommonPlaySkill):
 
     def stop(self):
         if self.audio_state == 'playing':
-            self.mediaplayer.stop()
-            self.mediaplayer.clear_list()
+            self.audio_service.stop()
             LOG.debug('Stopping stream')
         self.audio_state = 'stopped'
         return True
