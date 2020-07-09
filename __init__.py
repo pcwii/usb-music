@@ -1,4 +1,4 @@
-from unittest import TestCase, mock
+#from unittest import TestCase, mock
 
 from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
 from adapt.intent import IntentBuilder
@@ -36,7 +36,7 @@ class USBMusicSkill(CommonPlaySkill):
 
     def __init__(self):
         super(USBMusicSkill, self).__init__('USBMusicSkill')
-        self.bus = mock.Mock(name='bus')
+        self.bus = 'bus'
         self.song_list = []
         self.prev_status = False
         self.song_artist = ""
