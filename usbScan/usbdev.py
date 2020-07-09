@@ -123,7 +123,8 @@ def uMountPathUsbDevice():
     # check if the dev path exists
     if os.path.exists(USBDEV_DEVPATH):
         #command = "sudo umount -f " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
-        command = "sudo umount -f " + USBDEV_DEVPATH + " /home/pi/mycroft-core/usb-music"
+        #command = "sudo umount -f " + USBDEV_DEVPA" /home/pi/mycroft-core/usb-music"
+        command = "sudo umount -f /home/pi/mycroft-core/usb-music"
         #command = "sudo mount -f /dev/sdb1 /home/pi/mycroft-core/usb-music"
         proc = subprocess.Popen(command,
                                shell=True, stdin=subprocess.PIPE,

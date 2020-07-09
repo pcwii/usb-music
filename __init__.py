@@ -36,7 +36,6 @@ class USBMusicSkill(CommonPlaySkill):
 
     def __init__(self):
         super(USBMusicSkill, self).__init__('USBMusicSkill')
-        #self.bus = 'bus'
         self.song_list = []
         self.prev_status = False
         self.song_artist = ""
