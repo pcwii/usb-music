@@ -19,7 +19,7 @@ import time
 import os
 from os.path import dirname
 from mutagen.easyid3 import EasyID3
-
+import random
 
 for each_module in sys.modules:
     if "usbScan" in each_module:
@@ -291,6 +291,7 @@ class USBMusicSkill(CommonPlaySkill):
             LOG.info("CPS Now Playing... " + each_song['label'] + " from location: " + each_song['location'])
             url = each_song['location']
             tracklist.append(url)
+        random.shuffle(tracklist)
         LOG.info(str(tracklist))
         self.speak_dialog('now.playing')
         wait_while_speaking()
