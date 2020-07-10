@@ -72,6 +72,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.smb_uname = self.settings.get("smb_uname", "guest")
         self.smb_pass = self.settings.get("smb_pass", "")
         LOG.info('USB-Music Settings Changed, AutoPlay now: ' + str(self.Auto_Play))
+        LOG.info('USB-Music Settings Changed, SMB Path now: ' + str(self.smb_path))
 
 
     def init_usb_monitor_thread(self):  # creates the workout thread
