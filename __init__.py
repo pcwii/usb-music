@@ -312,8 +312,8 @@ class USBMusicSkill(CommonPlaySkill):
             for fileName in f_names:
                 if "mp3" in str(fileName):
                     song_path = str(root) + "/" + str(fileName)
-                    audio = EasyID3(song_path)
                     try:
+                        audio = EasyID3(song_path)
                         if len(audio) > 0:  # An ID3 tag found
                             if audio["title"] is None:
                                 self.song_label = str(fileName)[:-4]
@@ -332,6 +332,9 @@ class USBMusicSkill(CommonPlaySkill):
                             self.song_artist = ""
                             self.song_album = ""
                     except:
+                        self.song_label = str(fileName)[:-4]
+                        self.song_artist = ""
+                        self.song_album = ""
                         pass
                     info = {
                         "location": song_path,
