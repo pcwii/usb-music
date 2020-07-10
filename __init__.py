@@ -396,7 +396,6 @@ class USBMusicSkill(CommonPlaySkill):
         self.audio_state = 'stopped'
         return True
 
-
         #LOG.info('Stopping USB Monitor Thread!')
         #self.halt_usb_monitor_thread()
         pass
