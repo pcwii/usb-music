@@ -46,6 +46,9 @@ class USBMusicSkill(CommonPlaySkill):
         self.prev_status = False
         self.status = False
         self.path = ""
+        self.smb_path = ""
+        self.smb_uname = ""
+        self.smb_pass = ""
         self.usb_monitor = NewThread
         self.usbdevice = usbdev
         self.observer = self.usbdevice.startListener()
@@ -65,6 +68,9 @@ class USBMusicSkill(CommonPlaySkill):
 
     def on_websettings_changed(self):  # called when updating mycroft home page
         self.Auto_Play = self.settings.get("Auto_Play", False)  # used to enable / disable Auto_Play
+        self.smb_path = self.settings.get("smb_path", "//192.168.0.20/SMBMusic")
+        self.smb_uname = self.settings.get("smb_uname", "guest")
+        self.smb_pass = self.settings.get("smb_pass", "")
         LOG.info('USB-Music Settings Changed, AutoPlay now: ' + str(self.Auto_Play))
 
 
@@ -359,6 +365,15 @@ class USBMusicSkill(CommonPlaySkill):
     def handle_remove_usb_intent(self, message):
         self.usbdevice.uMountPathUsbDevice()
         LOG.info("Device Removed!")
+
+    @intent_handler(IntentBuilder('').require("GetKeyword").require("NetworkKeyword").require("MusicKeyword"))
+    def handle_get_smb_music_intent(self, message):
+        self.path = self.usbdevice.MountSMBPath(self.smb_path, self.smb_uname, self.smb_pass)
+        self.speak_dialog('update.library', expect_response=False)
+        self.song_list = self.create_library(self.path)
+        LOG.info("SMB Mounted!")
+        if self.Auto_Play:
+            self.play_all(self.song_list)
 
     @intent_handler(IntentBuilder('').require("StartKeyword").require("USBKeyword").require('ScanKeyword'))
     def handle_start_usb_intent(self, message):

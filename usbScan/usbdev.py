@@ -104,9 +104,7 @@ def getMountPathUsbDevice():
             while not os.path.exists('usb-music'):
                 # wait for directory to be created
                 time.sleep(1)
-        #command = "sudo mount -t auto " + USBDEV_DEVPATH + " " + os.getcwd() + '/usb-music'
         command = "sudo mount -t auto " + USBDEV_DEVPATH + " /home/pi/mycroft-core/usb-music"
-        #command = "sudo mount -t auto /dev/sdb1 /home/pi/mycroft-core/usb-music"
         p = os.system(command)
         # return the path to the folder from root
         truePath = os.getcwd() + '/usb-music'
@@ -136,35 +134,45 @@ def uMountPathUsbDevice():
 
         #p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
         # unmount the dev path to the folder
-
     return None
 
-#def mountPartition():
-#    if USBDEV_DEVPATH == None:
-#        return None
-#    # check if the dev path exists
-#    if os.path.exists(USBDEV_DEVPATH):
-#        command = "mount -t auto " + USBDEV_DEVPATH + " usb-music"
-#        p = subprocess.Popen(command,
-#                             stderr=subprocess.STDOUT,
-#                             stdout=subprocess.PIPE)
-#   time.sleep(1.5)
-#   if not os.path.ismount(mnt):
-#       out, err = p.communicate()
-#       raise IOError(out.strip('\n'))
 
-#def unmountPartition():
-#    if USBDEV_DEVPATH == None:
-#        return None
-#    # check if the dev path exists
-#    if os.path.exists(USBDEV_DEVPATH):
-#        command = "umount " + USBDEV_DEVPATH + " usb-music"
-#        p = subprocess.Popen(command,
-#                             stderr=subprocess.STDOUT,
-#                             stdout=subprocess.PIPE)
-#    p.wait()
-#    time.sleep(1.5)
-#    out, err = p.communicate()
-#    # If it's still mounted raise an IOError!
-#    if os.path.ismount(mnt):
-#        raise IOError(err)
+def MountSMBPath(smbPath=None, uname=None, pword=None):
+    """
+    sudo mount -t cifs //192.168.0.20/SMBMusic /home/pi/mycroft-core/smb-music -o username=guest,password="",domain=domain
+    """
+    if smbPath:
+        LOG.info('found smb device: ' + str(smbPath))
+        if not os.path.exists('smb-music'):
+            os.makedirs('smb-music')
+            while not os.path.exists('smb-music'):
+                # wait for directory to be created
+                time.sleep(1)
+        if uname:
+            strUser = "username=" + str(uname)
+            if pword:
+                strPass = "password=" + str(pword)
+            else:
+                strPass = 'password=""'
+            command = "sudo mount -t cifs " + str(smbPath) + " /home/pi/mycroft-core/smb-music -o " +\
+                      strUser + "," +strPass + ",domain=domain"
+        else:
+            command = "sudo mount -t cifs " + str(smbPath) + " /home/pi/mycroft-core/smb-music -o domain=domain"
+        p = os.system(command)
+        # return the path to the folder from root
+        truePath = os.getcwd() + '/smb-music'
+        LOG.info('Created mount path: ' + str(truePath))
+        return truePath
+    else:
+        return None
+
+def uMountSMBPath():
+    command = "sudo umount -f /home/pi/mycroft-core/smb-music"
+    proc = subprocess.Popen(command,
+                            shell=True, stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    time.sleep(1.5)
+    if os.path.exists('smb-music'):
+        os.removedirs('smb-music')
+    return None

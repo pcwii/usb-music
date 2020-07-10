@@ -10,6 +10,24 @@
                         "type": "checkbox",
                         "label": "Enable / Disable AutoPlay?",
                         "value": "false"
+                    },
+                    {
+                        "name": "smb_path",
+                        "type": "text",
+                        "label": "enter smb path eg. //ip/share",
+                        "value": "//192.168.0.20/SMBMusic"
+                    },
+                    {
+                        "name": "smb_uname",
+                        "type": "text",
+                        "label": "Optional SMB Username",
+                        "value": "guest"
+                    },
+                    {
+                        "name": "smb_pass",
+                        "type": "password",
+                        "label": "Optional SMB Password",
+                        "value": ""
                     }
                 ]
             }
