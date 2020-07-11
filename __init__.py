@@ -231,6 +231,7 @@ class USBMusicSkill(CommonPlaySkill):
                     LOG.info("path: " + str(self.path))
                     LOG.info("---------------------------------")
                     self.speak_dialog('update.library', data={"source": str("usb")}, expect_response=False)
+                    wait_while_speaking()
                     self.song_list = [i for i in self.song_list if not (i['type'] == 'usb')]
                     self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "usb"))
                     if self.Auto_Play:
@@ -242,6 +243,7 @@ class USBMusicSkill(CommonPlaySkill):
                     LOG.info("Device Removed!")
                     # Todo remove context "USB" so all play requests start with this skill
                     self.speak_dialog('usb.removed', expect_response=False)
+                    wait_while_speaking()
                     self.song_list = []
                     self.path = ""
                     self.on_websettings_changed()
@@ -302,7 +304,9 @@ class USBMusicSkill(CommonPlaySkill):
                     new_library.append(info)
                     #LOG.info("Added to library: " + str(info))
         song_count = len(new_library)
-        self.speak_dialog('scan.complete', data={"count": str(song_count), "source": str(source_type)}, expect_response=False)
+        self.speak_dialog('scan.complete', data={"count": str(song_count), "source": str(source_type)},
+                          expect_response=False)
+        wait_while_speaking()
         LOG.info("Added: " + str(song_count) + " to the library from the " + str(source_type) + " Device")
         self.library_ready = True
         return new_library
@@ -359,6 +363,7 @@ class USBMusicSkill(CommonPlaySkill):
             # mount the device and get the path
             self.path = self.usbdevice.getMountPathUsbDevice()
             self.speak_dialog('update.library', data={"source": str("usb")}, expect_response=False)
+            wait_while_speaking()
             self.song_list = [i for i in self.song_list if not (i['type'] == 'usb')]
             self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "usb"))
         else:
@@ -376,6 +381,7 @@ class USBMusicSkill(CommonPlaySkill):
     def handle_get_smb_music_intent(self, message):
         self.path = self.usbdevice.MountSMBPath(self.smb_path, self.smb_uname, self.smb_pass)
         self.speak_dialog('update.library', data={"source": str("smb")}, expect_response=False)
+        wait_while_speaking()
         self.song_list = [i for i in self.song_list if not (i['type'] == 'smb')]
         self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "smb"))
         LOG.info("SMB Mounted!")
