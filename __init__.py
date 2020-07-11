@@ -45,6 +45,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.Auto_Play = False
         self.prev_status = False
         self.status = False
+        self.library_ready = False
         self.path = ""
         self.smb_path = ""
         self.smb_uname = ""
@@ -65,7 +66,6 @@ class USBMusicSkill(CommonPlaySkill):
         self.settings_change_callback = self.on_websettings_changed
         self.on_websettings_changed()
 
-
     def on_websettings_changed(self):  # called when updating mycroft home page
         self.Auto_Play = self.settings.get("Auto_Play", False)  # used to enable / disable Auto_Play
         self.smb_path = self.settings.get("smb_path", "//192.168.0.20/SMBMusic")
@@ -73,7 +73,6 @@ class USBMusicSkill(CommonPlaySkill):
         self.smb_pass = self.settings.get("smb_pass", "")
         LOG.info('USB-Music Settings Changed, AutoPlay now: ' + str(self.Auto_Play))
         LOG.info('USB-Music Settings Changed, SMB Path now: ' + str(self.smb_path))
-
 
     def init_usb_monitor_thread(self):  # creates the workout thread
         self.usb_monitor.idStop = False
@@ -104,34 +103,8 @@ class USBMusicSkill(CommonPlaySkill):
             return_string = ' '.join(str(e) for e in return_list)
         return return_string
 
-
-    def CPS_match_query_phrase(self, phrase):
-        """
-            The method is invoked by the PlayBackControlSkill.
-        """
-        LOG.info('USBMusicSkill received the following phrase: ' + phrase)
-        if self.status:  # Confirm the USB is inserted
-            LOG.info("USBMusicSkill is Searching for requested media...")
-            play_request = self.parse_music_utterance(phrase)  # get the requested Music Item
-            LOG.info("USBMusicSkill Parse Routine Returned: " + str(play_request))
-            music_playlist = self.search_music_library(play_request[0],
-                                                       category=play_request[1])  # search for the item in the library
-
-            if music_playlist is None:
-                return None  # until a match is found
-            else:
-                if len(music_playlist) > 0:
-                    match_level = CPSMatchLevel.EXACT
-                    data = music_playlist
-                    LOG.info('Music found that matched the request!')
-                    return phrase, match_level, data
-                else:
-                    return None  # until a match is found
-        else:
-            LOG.info("NO USB Device, Passing on this request")
-            return None
-
     def parse_music_utterance(self, phrase):
+        # Todo: move Regex to file for language support
         # returns what was spoken in the utterance
         return_type = "any"
         str_request = str(phrase)
@@ -196,7 +169,7 @@ class USBMusicSkill(CommonPlaySkill):
         search_item = self.numeric_replace(search_item)
         found_list = []  # this is a dict of all the items found that match the search
         search_words = search_item.replace("-", "").lower().split()
-        # check each movie in the list for strings that match all the words in the search
+        # check each song in the list for strings that match all the words in the search
         for each_song in self.song_list:  # check each song in the list for the one we are looking for
             item_name = each_song[category].replace("-", "")
             if len(item_name) > 0:
@@ -207,7 +180,8 @@ class USBMusicSkill(CommonPlaySkill):
                         "location": each_song['location'],
                         "label": each_song['label'],
                         "album": each_song['album'],
-                        "artist": each_song['artist']
+                        "artist": each_song['artist'],
+                        "source": each_song['source']
                     }
                     found_list.append(info)
         LOG.info('Found the following songs: ' + str(found_list))
@@ -218,7 +192,8 @@ class USBMusicSkill(CommonPlaySkill):
                 "location": each_song['location'],
                 "label": each_song['label'],
                 "album": each_song['album'],
-                "artist": each_song['artist']
+                "artist": each_song['artist'],
+                "source": each_song['source']
             }  # Todo this is missing in the kodi skill????
             song_title = str(each_song['label'])
             if song_title not in str(temp_list):
@@ -230,25 +205,6 @@ class USBMusicSkill(CommonPlaySkill):
                     temp_list.append(info)
         found_list = temp_list
         return found_list  # returns a dictionary of matched movies
-
-    def CPS_start(self, phrase, data):
-        """ Starts playback.
-            Called by the playback control skill to start playback if the
-            skill is selected (has the best match level)
-        """
-        tracklist = []
-        LOG.info('USBMusicSkill, Playback received the following phrase and Data: ' + phrase + ' ' + str(data))
-        for each_song in data:
-            LOG.info("CPS Now Playing... " + each_song['label'] + " from location: " + each_song['location'])
-            url = each_song['location']
-            #self.audioservice.play(url)  #
-            tracklist.append(url)
-        LOG.info(str(tracklist))
-        self.speak_dialog('now.playing')
-        wait_while_speaking()
-        self.audio_service.play(tracklist)
-        self.audio_state = 'playing'
-        pass
 
     def start_usb_thread(self, my_id, terminate):
         """
@@ -274,9 +230,9 @@ class USBMusicSkill(CommonPlaySkill):
                     LOG.info("dev: " + str(device))
                     LOG.info("path: " + str(self.path))
                     LOG.info("---------------------------------")
-                    self.speak_dialog('update.library', expect_response=False)
-                    # Todo add context "USB" so all play requests start with this skill
-                    self.song_list = self.create_library(self.path)
+                    self.speak_dialog('update.library', data={"source": str("usb")}, expect_response=False)
+                    self.song_list = [i for i in self.song_list if not (i['type'] == 'usb')]
+                    self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "usb"))
                     if self.Auto_Play:
                         self.play_all(self.song_list)
                 else:
@@ -299,16 +255,16 @@ class USBMusicSkill(CommonPlaySkill):
             url = each_song['location']
             tracklist.append(url)
         random.shuffle(tracklist)
-        LOG.info(str(tracklist))
+        #LOG.info(str(tracklist))
         self.speak_dialog('now.playing')
         wait_while_speaking()
         self.audio_service.play(tracklist)
         self.audio_state = 'playing'
 
-
-    def create_library(self, usb_path):
+    def create_library(self, source_path, source_type="usb"):
+        self.library_ready = False
         new_library = []
-        for root, d_names, f_names in os.walk(str(usb_path)):
+        for root, d_names, f_names in os.walk(str(source_path)):
             for fileName in f_names:
                 if "mp3" in str(fileName):
                     song_path = str(root) + "/" + str(fileName)
@@ -340,15 +296,60 @@ class USBMusicSkill(CommonPlaySkill):
                         "location": song_path,
                         "label": self.song_label,
                         "artist": self.song_artist,
-                        "album": self.song_album
+                        "album": self.song_album,
+                        "source": str(source_type)
                     }
                     new_library.append(info)
-                    LOG.info("Added to library: " + str(info))
-        # Todo announce how many songs where found
+                    #LOG.info("Added to library: " + str(info))
         song_count = len(new_library)
-        self.speak_dialog('scan.complete', data={"count": str(song_count)}, expect_response=False)
-        LOG.info("Added: " + str(song_count) + " to the library from the USB Device")
+        self.speak_dialog('scan.complete', data={"count": str(song_count), "source": str(source_type)}, expect_response=False)
+        LOG.info("Added: " + str(song_count) + " to the library from the " + str(source_type) + " Device")
+        self.library_ready = True
         return new_library
+
+    def CPS_match_query_phrase(self, phrase):
+        """
+            The method is invoked by the PlayBackControlSkill.
+        """
+        LOG.info('USBMusicSkill received the following phrase: ' + phrase)
+        if self.status and self.library_ready:  # Confirm the USB is inserted
+            LOG.info("USBMusicSkill is Searching for requested media...")
+            play_request = self.parse_music_utterance(phrase)  # get the requested Music Item
+            LOG.info("USBMusicSkill Parse Routine Returned: " + str(play_request))
+            music_playlist = self.search_music_library(play_request[0],
+                                                       category=play_request[1])  # search for the item in the library
+
+            if music_playlist is None:
+                return None  # until a match is found
+            else:
+                if len(music_playlist) > 0:
+                    match_level = CPSMatchLevel.EXACT
+                    data = music_playlist
+                    LOG.info('Music found that matched the request!')
+                    return phrase, match_level, data
+                else:
+                    return None  # until a match is found
+        else:
+            LOG.info("Device or Library Not Ready, Passing on this request")
+            return None
+
+    def CPS_start(self, phrase, data):
+        """ Starts playback.
+            Called by the playback control skill to start playback if the
+            skill is selected (has the best match level)
+        """
+        tracklist = []
+        LOG.info('USBMusicSkill, Playback received the following phrase and Data: ' + phrase + ' ' + str(data))
+        for each_song in data:
+            LOG.info("CPS Now Playing... " + each_song['label'] + " from location: " + each_song['location'])
+            url = each_song['location']
+            tracklist.append(url)
+        #LOG.info(str(tracklist))
+        self.speak_dialog('now.playing')
+        wait_while_speaking()
+        self.audio_service.play(tracklist)
+        self.audio_state = 'playing'
+        pass
 
     @intent_handler(IntentBuilder('').require("UpdateKeyword").require("USBKeyword").require("LibraryKeyword"))
     def handle_update_library_intent(self, message):
@@ -357,8 +358,9 @@ class USBMusicSkill(CommonPlaySkill):
             device = self.usbdevice.getDevData()
             # mount the device and get the path
             self.path = self.usbdevice.getMountPathUsbDevice()
-            self.speak_dialog('update.library', expect_response=False)
-            self.song_list = self.create_library(self.path)
+            self.speak_dialog('update.library', data={"source": str("usb")}, expect_response=False)
+            self.song_list = [i for i in self.song_list if not (i['type'] == 'usb')]
+            self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "usb"))
         else:
             self.usbdevice.uMountPathUsbDevice()
             # Play Music Added here
@@ -373,11 +375,12 @@ class USBMusicSkill(CommonPlaySkill):
     @intent_handler(IntentBuilder('').require("GetKeyword").require("NetworkKeyword").require("MusicKeyword"))
     def handle_get_smb_music_intent(self, message):
         self.path = self.usbdevice.MountSMBPath(self.smb_path, self.smb_uname, self.smb_pass)
-        self.speak_dialog('update.library', expect_response=False)
-        self.song_list = self.create_library(self.path)
+        self.speak_dialog('update.library', data={"source": str("smb")}, expect_response=False)
+        self.song_list = [i for i in self.song_list if not (i['type'] == 'smb')]
+        self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "smb"))
         LOG.info("SMB Mounted!")
-        if self.Auto_Play:
-            self.play_all(self.song_list)
+        #if self.Auto_Play:
+        #    self.play_all(self.song_list)
 
     @intent_handler(IntentBuilder('').require("StartKeyword").require("USBKeyword").require('ScanKeyword'))
     def handle_start_usb_intent(self, message):
@@ -388,6 +391,8 @@ class USBMusicSkill(CommonPlaySkill):
             LOG.info("Scan should start!")
             self.init_usb_monitor_thread()
 
+    def merge_library(self, dict1, dict2):
+        return dict2.update(dict1)
 
     def stop(self):
         if self.audio_state == 'playing':
