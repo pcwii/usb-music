@@ -316,7 +316,7 @@ class USBMusicSkill(CommonPlaySkill):
             The method is invoked by the PlayBackControlSkill.
         """
         LOG.info('USBMusicSkill received the following phrase: ' + phrase)
-        if self.status and self.library_ready:  # Confirm the USB is inserted
+        if self.status or self.library_ready:  # Confirm the USB is inserted
             LOG.info("USBMusicSkill is Searching for requested media...")
             play_request = self.parse_music_utterance(phrase)  # get the requested Music Item
             LOG.info("USBMusicSkill Parse Routine Returned: " + str(play_request))
