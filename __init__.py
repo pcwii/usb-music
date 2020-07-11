@@ -399,8 +399,8 @@ class USBMusicSkill(CommonPlaySkill):
 
     @intent_handler(IntentBuilder('').require("ShowKeyword").require("MusicKeyword").require('LibraryKeyword'))
     def handle_start_usb_intent(self, message):
-        LOG.info(str(self.song_list)
-        LOG.info('Library Size: '+ str(len(self.song_list)))
+        LOG.info(str(self.song_list))
+        LOG.info('Library Size: ' + str(len(self.song_list)))
 
 
 

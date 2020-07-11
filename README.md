@@ -14,6 +14,7 @@ Unplugging the usb will automatically stop and unmount the device.
 * "play the song blue suede shoes"
 * "play the album appeal to reason"
 * "get network music"
+* "show music library"
 
 
 ## Credits 
