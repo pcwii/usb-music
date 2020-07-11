@@ -13,6 +13,8 @@ Unplugging the usb will automatically stop and unmount the device.
 * "play all shook up"
 * "play the song blue suede shoes"
 * "play the album appeal to reason"
+* "get network music"
+
 
 ## Credits 
 * PCWii (20200709 Covid-19 Project)
@@ -33,4 +35,4 @@ Tested on platform_picroft (others untested)
 - Add "next/previous" commands
 - Add "random" selection
 - Add thumbnails for display
-- ...?
+- ~~Add Network "SMB" support (20200710)~~

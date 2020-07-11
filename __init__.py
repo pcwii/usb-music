@@ -398,7 +398,8 @@ class USBMusicSkill(CommonPlaySkill):
             self.init_usb_monitor_thread()
 
     def merge_library(self, dict1, dict2):
-        return dict2.update(dict1)
+        return dict1 + dict2
+        #return dict2.update(dict1)
 
     def stop(self):
         if self.audio_state == 'playing':
