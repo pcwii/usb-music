@@ -158,7 +158,7 @@ def MountSMBPath(smbPath=None, uname=None, pword=None):
                       strUser + "," +strPass + ",domain=domain"
         else:
             command = "sudo mount -t cifs " + str(smbPath) + " /home/pi/mycroft-core/smb-music -o domain=domain"
-        LOG.info('Mounting SMB Path: ' + str(command))
+        LOG.info('Mounting SMB Path: ' + str(smbPath) + ', to /home/pi/mycroft-core/smb-music')
         p = os.system(command)
         # return the path to the folder from root
         truePath = os.getcwd() + '/smb-music'
