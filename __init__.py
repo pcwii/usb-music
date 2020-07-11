@@ -206,6 +206,9 @@ class USBMusicSkill(CommonPlaySkill):
         found_list = temp_list
         return found_list  # returns a dictionary of matched movies
 
+    def merge_library(self, dict1, dict2):
+        return dict1 + dict2
+
     def start_usb_thread(self, my_id, terminate):
         """
         This thread monitors the USB port for an insertion / removal event
@@ -268,7 +271,7 @@ class USBMusicSkill(CommonPlaySkill):
         new_library = []
         for root, d_names, f_names in os.walk(str(source_path)):
             for fileName in f_names:
-                if "mp3" in str(fileName):
+                if ("mp3" or "flac") in str(fileName):
                     song_path = str(root) + "/" + str(fileName)
                     try:
                         audio = EasyID3(song_path)
@@ -404,8 +407,6 @@ class USBMusicSkill(CommonPlaySkill):
 
 
 
-    def merge_library(self, dict1, dict2):
-        return dict1 + dict2
 
     def stop(self):
         if self.audio_state == 'playing':

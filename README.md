@@ -37,3 +37,4 @@ Tested on platform_picroft (others untested)
 - Add "random" selection
 - Add thumbnails for display
 - ~~Add Network "SMB" support (20200710)~~
+- Add support for other music formats (FLAC, OGG)
