@@ -47,6 +47,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.status = False
         self.library_ready = False
         self.path = ""
+        self.local_path = ""
         self.smb_path = ""
         self.smb_uname = ""
         self.smb_pass = ""
@@ -68,6 +69,7 @@ class USBMusicSkill(CommonPlaySkill):
 
     def on_websettings_changed(self):  # called when updating mycroft home page
         self.Auto_Play = self.settings.get("Auto_Play", False)  # used to enable / disable Auto_Play
+        self.local_path = self.settings.get("local_path", "~/Music")
         self.smb_path = self.settings.get("smb_path", "//192.168.0.20/SMBMusic")
         self.smb_uname = self.settings.get("smb_uname", "guest")
         self.smb_pass = self.settings.get("smb_pass", "")
@@ -365,7 +367,8 @@ class USBMusicSkill(CommonPlaySkill):
             device = self.usbdevice.getDevData()
             # mount the device and get the path
             self.path = self.usbdevice.getMountPathUsbDevice()
-            self.speak_dialog('update.library', data={"source": str("usb")}, expect_response=False)
+            self.speak_dialog('update.library', data={"source": str(message.data.get("USBKeyword"))},
+                              expect_response=False)
             wait_while_speaking()
             self.song_list = [i for i in self.song_list if not (i['type'] == 'usb')]
             self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "usb"))
@@ -380,16 +383,25 @@ class USBMusicSkill(CommonPlaySkill):
         self.usbdevice.uMountPathUsbDevice()
         LOG.info("Device Removed!")
 
-    @intent_handler(IntentBuilder('').require("GetKeyword").require("NetworkKeyword").require("MusicKeyword"))
+    @intent_handler(IntentBuilder('').require("UpdateKeyword").require("NetworkKeyword").require("LibraryKeyword"))
     def handle_get_smb_music_intent(self, message):
         self.path = self.usbdevice.MountSMBPath(self.smb_path, self.smb_uname, self.smb_pass)
-        self.speak_dialog('update.library', data={"source": str("smb")}, expect_response=False)
+        self.speak_dialog('update.library', data={"source": str(message.data.get("NetworkKeyword"))},
+                          expect_response=False)
         wait_while_speaking()
         self.song_list = [i for i in self.song_list if not (i['type'] == 'smb')]
         self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "smb"))
         LOG.info("SMB Mounted!")
-        #if self.Auto_Play:
-        #    self.play_all(self.song_list)
+
+    @intent_handler(IntentBuilder('').require("UpdateKeyword").require("LocalKeyword").require("LibraryKeyword"))
+    def handle_get_local_music_intent(self, message):
+        self.path = self.local_path
+        self.speak_dialog('update.library', data={"source": str(message.data.get("LocalKeyword"))},
+                          expect_response=False)
+        wait_while_speaking()
+        self.song_list = [i for i in self.song_list if not (i['type'] == 'local')]
+        self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "local"))
+        LOG.info("Local Mounted!")
 
     @intent_handler(IntentBuilder('').require("StartKeyword").require("USBKeyword").require('ScanKeyword'))
     def handle_start_usb_intent(self, message):
@@ -404,9 +416,6 @@ class USBMusicSkill(CommonPlaySkill):
     def handle_show_music_library_intent(self, message):
         LOG.info(str(self.song_list))
         LOG.info('Library Size: ' + str(len(self.song_list)))
-
-
-
 
     def stop(self):
         if self.audio_state == 'playing':

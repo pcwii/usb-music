@@ -8,13 +8,19 @@
                     {
                         "name": "Auto_Play",
                         "type": "checkbox",
-                        "label": "Enable / Disable AutoPlay?",
+                        "label": "Enable / Disable USB AutoPlay?",
                         "value": "false"
+                    },
+                    {
+                        "name": "local_path",
+                        "type": "text",
+                        "label": "Enter Local Source Path eg. ~/Music",
+                        "value": "~/Music"
                     },
                     {
                         "name": "smb_path",
                         "type": "text",
-                        "label": "enter smb path eg. //ip/share",
+                        "label": "Enter SMB Path eg. //ip/share",
                         "value": "//192.168.0.20/SMBMusic"
                     },
                     {

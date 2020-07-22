@@ -1,20 +1,23 @@
 # <img src='/images/usbmusic.png' card_color='#40DBB0' width='50' height='50' style='vertical-align:bottom'/> USB Music
-Play Music from a USB device with Mycroft.ai
+Play Music from local sources (usb, smb, local path) with Mycroft.ai
 
 ## About 
 Play local music by inserting a USB drive into your Mycroft device. Upon Inserting a USB Device Mycroft
-will scan the device for MP3 music and add it to a temporary library that you can play. 
+will scan the device for MP3 music and add it to a temporary library that you can play.
+USB music ca 
 ## AutoPlay
-If autoplay is enabled in the websettings then the usb music will begin playing imediatly when inserted.
-Unplugging the usb will automatically stop and unmount the device.
+If AutoPlay is enabled in the websettings then the USB music will begin playing immediately when inserted.
+Unplugging the usb will automatically stop and unmount the USB device.
+AutoPlay only functions with USB sources, not SMB or Local Path.
 # <img src='/images/settings.png' card_color='#40DBB0' width='355' height='190' style='vertical-align:bottom'/>
 ## Command Examples
 * "play the artist elvis Presley"
 * "play all shook up"
 * "play the song blue suede shoes"
 * "play the album appeal to reason"
-* "get network music"
-* "show music library"
+* "update network library"
+* "update local library"
+* "update usb library"
 
 
 ## Credits 
@@ -23,7 +26,7 @@ Unplugging the usb will automatically stop and unmount the device.
 ## Category
 **Media**
 ## Tags
-'#music, #usb, #mycroft.ai, #python, #skills, #mp3, #CPS'
+'#music, #usb, #mycroft.ai, #python, #skills, #mp3, #CPS, SMB, Local '
 ## Require 
 Tested on platform_picroft (others untested) 
 ## Other Requirements
@@ -38,3 +41,4 @@ Tested on platform_picroft (others untested)
 - Add thumbnails for display
 - ~~Add Network "SMB" support (20200710)~~
 - Add support for other music formats (FLAC, OGG)
+- Add Local path support (20200722)
