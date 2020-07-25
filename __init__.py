@@ -361,7 +361,7 @@ class USBMusicSkill(CommonPlaySkill):
         pass
 
     @intent_handler(IntentBuilder('').require("UpdateKeyword").require("USBKeyword").require("LibraryKeyword"))
-    def handle_update_library_intent(self, message):
+    def handle_update_usb_library_intent(self, message):
         LOG.info("Called Update Library Intent")
         if self.usbdevice.isDeviceConnected():
             device = self.usbdevice.getDevData()
@@ -403,6 +403,29 @@ class USBMusicSkill(CommonPlaySkill):
         self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "local"))
         LOG.info("Local Mounted!")
 
+    @intent_handler(IntentBuilder('').require("UpdateKeyword").require("MusicKeyword").require("LibraryKeyword"))
+    def handle_get_All_available_intent(self, message):
+        self.path = self.usbdevice.MountSMBPath(self.smb_path, self.smb_uname, self.smb_pass)
+        self.speak_dialog('update.library', data={"source": str(message.data.get("MusicKeyword"))},
+                          expect_response=False)
+        wait_while_speaking()
+        self.song_list = [i for i in self.song_list if not (i['type'] == 'smb')]
+        self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "smb"))
+        LOG.info("SMB Mounted!")
+        self.path = self.local_path
+        self.song_list = [i for i in self.song_list if not (i['type'] == 'local')]
+        self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "local"))
+        LOG.info("Local Mounted!")
+        if self.usbdevice.isDeviceConnected():
+            device = self.usbdevice.getDevData()
+            # mount the device and get the path
+            self.path = self.usbdevice.getMountPathUsbDevice()
+            self.speak_dialog('update.library', data={"source": str(message.data.get("USBKeyword"))},
+                              expect_response=False)
+            wait_while_speaking()
+            self.song_list = [i for i in self.song_list if not (i['type'] == 'usb')]
+            self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "usb"))
+
     @intent_handler(IntentBuilder('').require("StartKeyword").require("USBKeyword").require('ScanKeyword'))
     def handle_start_usb_intent(self, message):
         LOG.info('Thread Running: ' + str(self.usb_monitor.idThread.isAlive()))
@@ -427,6 +450,7 @@ class USBMusicSkill(CommonPlaySkill):
         #LOG.info('Stopping USB Monitor Thread!')
         #self.halt_usb_monitor_thread()
         pass
+
 
 def create_skill():
     return USBMusicSkill()

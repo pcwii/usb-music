@@ -2,9 +2,11 @@
 Play Music from local sources (usb, smb, local path) with Mycroft.ai
 
 ## About 
-Play local music by inserting a USB drive into your Mycroft device. Upon Inserting a USB Device Mycroft
+Play local music sources (USB, SMB, Local)
+1. Inserting a USB drive into your Mycroft device. Upon Inserting a USB Device Mycroft
 will scan the device for MP3 music and add it to a temporary library that you can play.
-USB music ca 
+2. Adding an SMB source will let you play music from that source.
+3. Adding a local path source will let you play music from that source. 
 ## AutoPlay
 If AutoPlay is enabled in the websettings then the USB music will begin playing immediately when inserted.
 Unplugging the usb will automatically stop and unmount the USB device.
@@ -18,7 +20,7 @@ AutoPlay only functions with USB sources, not SMB or Local Path.
 * "update network library"
 * "update local library"
 * "update usb library"
-
+* "update music library"
 
 ## Credits 
 * PCWii (20200709 Covid-19 Project)
@@ -26,7 +28,7 @@ AutoPlay only functions with USB sources, not SMB or Local Path.
 ## Category
 **Media**
 ## Tags
-'#music, #usb, #mycroft.ai, #python, #skills, #mp3, #CPS, SMB, Local '
+'#music, #usb, #mycroft.ai, #python, #skills, #mp3, #CPS, #SMB, #Local '
 ## Require 
 Tested on platform_picroft (others untested) 
 ## Other Requirements
