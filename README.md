@@ -1,5 +1,5 @@
 # <img src='/images/usbmusic.png' card_color='#40DBB0' width='50' height='50' style='vertical-align:bottom'/> USB Music
-Play Music from local sources (usb, smb, local path) with Mycroft.ai
+Play Music from local (non-cloud based) sources (usb, smb, local path) with Mycroft.ai
 
 ## About 
 Play local music sources (USB, SMB, Local)
