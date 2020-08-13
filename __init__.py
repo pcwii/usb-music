@@ -284,7 +284,10 @@ class USBMusicSkill(CommonPlaySkill):
                             else:
                                 self.song_label = audio["title"][0]
                             if audio["artist"] is None:
-                                self.song_artist = ""
+                                if audio["Contributing artists"]:
+                                    self.song_artist = audio["Contributing artists"]
+                                else:
+                                    self.song_artist = ""
                             else:
                                 self.song_artist = audio["artist"][0]
                             if audio["album"] is None:
