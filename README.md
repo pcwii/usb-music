@@ -21,6 +21,7 @@ AutoPlay only functions with USB sources, not SMB or Local Path.
 * "update local library"
 * "update usb library"
 * "update music library"
+* "stop"
 
 ## Credits 
 * PCWii (20200709 Covid-19 Project)
