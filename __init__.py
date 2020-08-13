@@ -274,7 +274,7 @@ class USBMusicSkill(CommonPlaySkill):
         new_library = []
         for root, d_names, f_names in os.walk(str(source_path)):
             for fileName in f_names:
-                if "flac" in str(fileName):
+                if "flac" in str(fileName): #add flac filter
                     LOG.info("Found FLAC File: " + str(fileName))
                 if ("mp3" or "flac") in str(fileName):
                     song_path = str(root) + "/" + str(fileName)
