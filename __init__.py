@@ -18,7 +18,7 @@ import re
 import time
 import os
 from os.path import dirname
-from mutagen.easyid3 import EasyID3
+from mutagen.easyid3 import EasyID3, FLAC
 import random
 
 for each_module in sys.modules:
