@@ -285,7 +285,7 @@ class USBMusicSkill(CommonPlaySkill):
                             if audio["title"] is None:
                                 if "flac" in str(fileName):  # add flac filter
                                     self.song_label = str(fileName)[:-5]
-                                else
+                                else:
                                     self.song_label = str(fileName)[:-4]
                             else:
                                 self.song_label = audio["title"][0]
