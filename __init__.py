@@ -393,10 +393,9 @@ class USBMusicSkill(CommonPlaySkill):
         self.speak_dialog('update.library', data={"source": str(message.data.get("NetworkKeyword"))},
                           expect_response=False)
         wait_while_speaking()
-        try:
-            self.song_list = [i for i in self.song_list if not (i['source'] == 'smb')]
-            self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "smb"))
-            LOG.info("SMB Mounted!")
+        self.song_list = [i for i in self.song_list if not (i['source'] == 'smb')]
+        self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "smb"))
+        LOG.info("SMB Mounted!")
 
     @intent_handler(IntentBuilder('').require("UpdateKeyword").require("LocalKeyword").require("LibraryKeyword"))
     def handle_get_local_music_intent(self, message):
