@@ -274,15 +274,19 @@ class USBMusicSkill(CommonPlaySkill):
         new_library = []
         for root, d_names, f_names in os.walk(str(source_path)):
             for fileName in f_names:
-                if "flac" in str(fileName): #add flac filter
-                    LOG.info("Found FLAC File: " + str(fileName))
                 if ("mp3" or "flac") in str(fileName):
                     song_path = str(root) + "/" + str(fileName)
                     try:
-                        audio = EasyID3(song_path)
+                        if "flac" in str(fileName):  # add flac filter
+                            audio = FLAC(song_path)
+                        else:
+                            audio = EasyID3(song_path)
                         if len(audio) > 0:  # An ID3 tag found
                             if audio["title"] is None:
-                                self.song_label = str(fileName)[:-4]
+                                if "flac" in str(fileName):  # add flac filter
+                                    self.song_label = str(fileName)[:-5]
+                                else
+                                    self.song_label = str(fileName)[:-4]
                             else:
                                 self.song_label = audio["title"][0]
                             if audio["artist"] is None:
