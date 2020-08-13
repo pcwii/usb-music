@@ -69,12 +69,13 @@ class USBMusicSkill(CommonPlaySkill):
 
     def on_websettings_changed(self):  # called when updating mycroft home page
         self.Auto_Play = self.settings.get("Auto_Play", False)  # used to enable / disable Auto_Play
-        self.local_path = self.settings.get("local_path", "~/Music")
+        self.local_path = self.settings.get("local_path", "/home/pi/Music")
         self.smb_path = self.settings.get("smb_path", "//192.168.0.20/SMBMusic")
         self.smb_uname = self.settings.get("smb_uname", "guest")
         self.smb_pass = self.settings.get("smb_pass", "")
         LOG.info('USB-Music Settings Changed, AutoPlay now: ' + str(self.Auto_Play))
         LOG.info('USB-Music Settings Changed, SMB Path now: ' + str(self.smb_path))
+        LOG.info('USB-Music Settings Changed, Local Path now: ' + str(self.local_path))
 
     def init_usb_monitor_thread(self):  # creates the workout thread
         self.usb_monitor.idStop = False
