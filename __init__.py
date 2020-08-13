@@ -263,7 +263,6 @@ class USBMusicSkill(CommonPlaySkill):
             url = each_song['location']
             tracklist.append(url)
         random.shuffle(tracklist)
-        #LOG.info(str(tracklist))
         self.speak_dialog('now.playing')
         wait_while_speaking()
         self.audio_service.play(tracklist)
