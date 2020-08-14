@@ -12,7 +12,8 @@ If AutoPlay is enabled in the websettings then the USB music will begin playing 
 Unplugging the usb will automatically stop and unmount the USB device.
 AutoPlay only functions with USB sources, not SMB or Local Path.
 # <img src='/images/settings.png' card_color='#40DBB0' width='355' height='190' style='vertical-align:bottom'/>
-## Command Examples
+## Command Examples - 
+###Collecting the library may take several minutes depending on the library size
 * "play the artist elvis Presley"
 * "play all shook up"
 * "play the song blue suede shoes"
