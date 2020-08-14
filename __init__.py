@@ -270,6 +270,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.audio_state = 'playing'
 
     def create_library(self, source_path, source_type="usb"):
+        # Todo - add regex to remove numbers from the begining of filenames to get song name (\d{1,3}|)( - |)(?P<song_Name>.+)
         self.library_ready = False
         new_library = []
         for root, d_names, f_names in os.walk(str(source_path)):
@@ -280,28 +281,29 @@ class USBMusicSkill(CommonPlaySkill):
                     try:
                         if "flac" in str(fileName):  # add flac filter
                             audio = FLAC(song_path)
-                            LOG.info("Checking Flac Tags" + str(audio))
+                            LOG.info("Checking FLAC Tags" + str(audio))
                         else:
                             audio = EasyID3(song_path)
+                            LOG.info("Checking ID3 Tags" + str(audio))
                         if len(audio) > 0:  # An ID3 tag found
-                            if audio["title"] is None:
+                            if audio['title'] is None:
                                 if "flac" in str(fileName):  # add flac filter
                                     self.song_label = str(fileName)[:-5]
                                 else:
                                     self.song_label = str(fileName)[:-4]
                             else:
-                                self.song_label = audio["title"][0]
-                            if audio["artist"] is None:
-                                if audio["Contributing artists"]:
-                                    self.song_artist = audio["Contributing artists"]
+                                self.song_label = audio['title'][0]
+                            if audio['artist'] is None:
+                                if audio['Contributing artists']:
+                                    self.song_artist = audio['Contributing artists'][0]
                                 else:
                                     self.song_artist = ""
                             else:
-                                self.song_artist = audio["artist"][0]
-                            if audio["album"] is None:
+                                self.song_artist = audio['artist'][0]
+                            if audio['album'] is None:
                                 self.song_album = ""
                             else:
-                                self.song_album = audio["album"][0]
+                                self.song_album = audio['album'][0]
                         else:  # There was no ID3 Tag found
                             if "flac" in str(fileName):  # add flac filter
                                 self.song_label = str(fileName)[:-5]
