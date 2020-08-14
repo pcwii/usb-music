@@ -280,19 +280,17 @@ class USBMusicSkill(CommonPlaySkill):
                     try:
                         if "flac" in str(fileName):  # add flac filter
                             audio = FLAC(song_path)
+                            LOG.info("Checking Flac Tags" + str(audio))
                         else:
                             audio = EasyID3(song_path)
                         if len(audio) > 0:  # An ID3 tag found
                             if audio["title"] is None:
                                 if "flac" in str(fileName):  # add flac filter
                                     self.song_label = str(fileName)[:-5]
-                                    LOG.info("Found Flac: " + self.song_label)
                                 else:
                                     self.song_label = str(fileName)[:-4]
                             else:
                                 self.song_label = audio["title"][0]
-                                if "flac" in str(fileName):  # add flac filter
-                                    LOG.info("Found Flac: " + audio["title"])
                             if audio["artist"] is None:
                                 if audio["Contributing artists"]:
                                     self.song_artist = audio["Contributing artists"]
@@ -305,11 +303,17 @@ class USBMusicSkill(CommonPlaySkill):
                             else:
                                 self.song_album = audio["album"][0]
                         else:  # There was no ID3 Tag found
-                            self.song_label = str(fileName)[:-4]
+                            if "flac" in str(fileName):  # add flac filter
+                                self.song_label = str(fileName)[:-5]
+                            else:
+                                self.song_label = str(fileName)[:-4]
                             self.song_artist = ""
                             self.song_album = ""
                     except:
-                        self.song_label = str(fileName)[:-4]
+                        if "flac" in str(fileName):  # add flac filter
+                            self.song_label = str(fileName)[:-5]
+                        else:
+                            self.song_label = str(fileName)[:-4]
                         self.song_artist = ""
                         self.song_album = ""
                         pass
@@ -321,7 +325,6 @@ class USBMusicSkill(CommonPlaySkill):
                         "source": str(source_type)
                     }
                     new_library.append(info)
-                    #LOG.info("Added to library: " + str(info))
         song_count = len(new_library)
         self.speak_dialog('scan.complete', data={"count": str(song_count), "source": str(source_type)},
                           expect_response=False)
