@@ -281,10 +281,10 @@ class USBMusicSkill(CommonPlaySkill):
                     try:
                         if "flac" in str(fileName):  # add flac filter
                             audio = FLAC(song_path)
-                            LOG.info("Checking FLAC Tags" + str(audio))
+                            # LOG.info("Checking FLAC Tags" + str(audio))
                         else:
                             audio = EasyID3(song_path)
-                            LOG.info("Checking ID3 Tags" + str(audio))
+                            #LOG.info("Checking ID3 Tags" + str(audio))
                         if len(audio) > 0:  # An ID3 tag found
                             if audio['title'] is None:
                                 if "flac" in str(fileName):  # add flac filter
@@ -293,6 +293,7 @@ class USBMusicSkill(CommonPlaySkill):
                                     self.song_label = str(fileName)[:-4]
                             else:
                                 self.song_label = audio['title'][0]
+                                LOG.info("Checking FLAC title: " + self.song_label)
                             if audio['artist'] is None:
                                 if audio['Contributing artists']:
                                     self.song_artist = audio['Contributing artists'][0]
