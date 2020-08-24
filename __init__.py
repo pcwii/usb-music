@@ -5,12 +5,12 @@ from adapt.intent import IntentBuilder
 from mycroft.skills.core import intent_handler, intent_file_handler
 from mycroft.util.log import LOG
 from mycroft.skills.audioservice import AudioService
+from mycroft.audio.services.vlc import VlcService
 from mycroft.audio import wait_while_speaking
 
 
 import threading
-from importlib import reload
-import sys
+from importlib import reloadimport sys
 
 from .usbScan import usbdev
 
@@ -38,6 +38,7 @@ class USBMusicSkill(CommonPlaySkill):
 
     def __init__(self):
         super(USBMusicSkill, self).__init__('USBMusicSkill')
+        self.mediaplayer = VlcService(config={'low_volume': 10, 'duck': True})
         self.song_list = []
         self.prev_status = False
         self.song_artist = ""
@@ -55,13 +56,13 @@ class USBMusicSkill(CommonPlaySkill):
         self.usb_monitor = NewThread
         self.usbdevice = usbdev
         self.observer = self.usbdevice.startListener()
-        self.audio_service = None
+        #self.audio_service = None
         self.audio_state = 'stopped'  # 'playing', 'stopped'
         LOG.info("USB Music Skill Loaded!")
 
     def initialize(self):
         self.load_data_files(dirname(__file__))
-        self.audio_service = AudioService(self.bus)
+        #self.audio_service = AudioService(self.bus)
         LOG.info("USB Music Skill Initialized!")
         self.halt_usb_monitor_thread()
         self.init_usb_monitor_thread()
@@ -244,7 +245,9 @@ class USBMusicSkill(CommonPlaySkill):
                     if self.Auto_Play:
                         self.play_all(self.song_list)
                 else:
-                    self.audio_service.stop()
+                    #self.audio_service.stop()
+                    self.mediaplayer.stop()
+
                     # unmount the path
                     self.usbdevice.uMountPathUsbDevice()
                     LOG.info("Device Removed!")
@@ -266,7 +269,10 @@ class USBMusicSkill(CommonPlaySkill):
         random.shuffle(tracklist)
         self.speak_dialog('now.playing')
         wait_while_speaking()
-        self.audio_service.play(tracklist)
+        self.mediaplayer.add_list(tracklist)
+        self.mediaplayer.play()
+        #self.audio_service.play(tracklist)
+
         self.audio_state = 'playing'
 
     def create_library(self, source_path, source_type="usb"):
@@ -275,8 +281,8 @@ class USBMusicSkill(CommonPlaySkill):
         new_library = []
         for root, d_names, f_names in os.walk(str(source_path)):
             for fileName in f_names:
-                #if ("mp3" or "flac") in str(fileName):
-                if ("flac") in str(fileName):
+                if ("mp3" or "flac") in str(fileName):
+                # if ("flac") in str(fileName):
                     song_path = str(root) + "/" + str(fileName)
                     try:
                         if "flac" in str(fileName):  # add flac filter
@@ -376,7 +382,9 @@ class USBMusicSkill(CommonPlaySkill):
         #LOG.info(str(tracklist))
         self.speak_dialog('now.playing')
         wait_while_speaking()
-        self.audio_service.play(tracklist)
+        #self.audio_service.play(tracklist)
+        self.mediaplayer.add_list(tracklist)
+        self.mediaplayer.play()
         self.audio_state = 'playing'
         pass
 
@@ -462,7 +470,9 @@ class USBMusicSkill(CommonPlaySkill):
 
     def stop(self):
         if self.audio_state == 'playing':
-            self.audio_service.stop()
+            #self.audio_service.stop()
+            self.mediaplayer.stop()
+
             LOG.debug('Stopping stream')
         self.audio_state = 'stopped'
         return True
