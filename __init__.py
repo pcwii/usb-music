@@ -167,6 +167,11 @@ class USBMusicSkill(CommonPlaySkill):
                 return found_list
             LOG.info("Artist: " + search_string + ", Not Found!")
             found_list = self.search_music_item(search_string, category="album")
+            if len(found_list) > 0:
+                return found_list
+            found_list = self.search_music_item(search_string, category="location")
+            if len(found_list) > 0:
+                return found_list
             if len(found_list) == 0:
                 LOG.info("Album: " + search_string + ", Not Found!")
                 return
