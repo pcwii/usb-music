@@ -305,7 +305,7 @@ class USBMusicSkill(CommonPlaySkill):
                             #LOG.info("Checking ID3 Tags" + str(audio))
                         if len(audio) > 0:  # An ID3 tag found
                             if audio['title'] is None:
-                                trim_length = len(str(foundType[0])) + 1
+                                trim_length = (len(str(foundType[0])) + 1) * -1
                                 self.song_label = str(fileName)[:trim_length]
                             else:
                                 self.song_label = audio['title'][0]
@@ -322,12 +322,12 @@ class USBMusicSkill(CommonPlaySkill):
                             else:
                                 self.song_album = audio['album'][0]
                         else:  # There was no ID3 Tag found
-                            trim_length = len(str(foundType[0])) + 1
+                            trim_length = (len(str(foundType[0])) + 1) * -1
                             self.song_label = str(fileName)[:trim_length]
                             self.song_artist = ""
                             self.song_album = ""
                     except:
-                        trim_length = len(str(foundType[0])) + 1
+                        trim_length = (len(str(foundType[0])) + 1) * -1
                         self.song_label = str(fileName)[:trim_length]
                         self.song_artist = ""
                         self.song_album = ""
