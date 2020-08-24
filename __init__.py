@@ -10,7 +10,8 @@ from mycroft.audio import wait_while_speaking
 
 
 import threading
-from importlib import reloadimport sys
+from importlib import reload
+import sys
 
 from .usbScan import usbdev
 
