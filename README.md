@@ -4,7 +4,7 @@ Play Music from local (non-cloud based) sources (usb, smb, local path) with Mycr
 ## About 
 Play local music sources (USB, SMB, Local)
 1. Inserting a USB drive into your Mycroft device. Upon Inserting a USB Device Mycroft
-will scan the device for MP3 music and add it to a temporary library that you can play.
+will scan the device for playable music and add it to a temporary library that you can play.
 2. Adding an SMB source will let you play music from that source.
 3. Adding a local path source will let you play music from that source.
 4. Supports the following music formats 'mp3', 'm4a', 'flac', 'wav', 'wma','aac' 
