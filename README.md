@@ -6,7 +6,8 @@ Play local music sources (USB, SMB, Local)
 1. Inserting a USB drive into your Mycroft device. Upon Inserting a USB Device Mycroft
 will scan the device for MP3 music and add it to a temporary library that you can play.
 2. Adding an SMB source will let you play music from that source.
-3. Adding a local path source will let you play music from that source. 
+3. Adding a local path source will let you play music from that source.
+4. Supports the following music formats 'mp3', 'm4a', 'flac', 'wav', 'wma','aac' 
 ## AutoPlay
 If AutoPlay is enabled in the websettings then the USB music will begin playing immediately when inserted.
 Unplugging the usb will automatically stop and unmount the USB device.
@@ -30,13 +31,14 @@ AutoPlay only functions with USB sources, not SMB or Local Path.
 ## Category
 **Media**
 ## Tags
-'#music, #usb, #mycroft.ai, #python, #skills, #mp3, #CPS, #SMB, #Local '
+'#music, #usb, #mycroft.ai, #python, #skills, #mp3, #m4a, #flac, #wav, #wma, #aac, #CPS, #SMB, #Local '
 ## Require 
 Tested on platform_picroft (others untested) 
 ## Other Requirements
 - [Mycroft](https://docs.mycroft.ai/installing.and.running/installation)
 - [mutagen](https://mutagen.readthedocs.io/en/latest/)
 - [pyudev](https://pyudev.readthedocs.io/en/latest/)
+- [vlc](https://www.videolan.org/index.html)
 ## Installation Notes
 - SSH and run: <b>msm install https://github.com/pcwii/usb-music.git</b>
 ## Todo
@@ -44,5 +46,5 @@ Tested on platform_picroft (others untested)
 - Add "random" selection
 - Add thumbnails for display
 - ~~Add Network "SMB" support (20200710)~~
-- Add support for other music formats (FLAC, OGG)
-- Add Local path support (20200722)
+- ~~Add support for other music formats (FLAC, OGG)~~
+- ~~Add Local path support (20200722)~~

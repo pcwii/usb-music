@@ -19,9 +19,13 @@ import re
 import time
 import os
 from os.path import dirname
+
+import random
+
 from mutagen.easyid3 import EasyID3
 from mutagen.flac import FLAC
-import random
+from mutagen.aac import AAC
+from mutagen.mp4 import MP4
 
 for each_module in sys.modules:
     if "usbScan" in each_module:
@@ -34,6 +38,7 @@ class NewThread:
     idStop = False
     idThread = threading.Thread
 
+MUSIC_TYPES = ['mp3', 'm4a', 'flac', 'wav', 'wma','aac']
 
 class USBMusicSkill(CommonPlaySkill):
 
@@ -282,22 +287,26 @@ class USBMusicSkill(CommonPlaySkill):
         new_library = []
         for root, d_names, f_names in os.walk(str(source_path)):
             for fileName in f_names:
-                #if ("mp3" or "flac") in str(fileName):
-                if ("flac") in str(fileName):
+                foundType = [musicType for musicType in MUSIC_TYPES if (musicType.lower() in fileName.lower())]
+                if bool(foundType):
                     song_path = str(root) + "/" + str(fileName)
                     try:
-                        if "flac" in str(fileName):  # add flac filter
+                        if "flac" in str(foundType[0].lower):  # add flac filter
                             audio = FLAC(song_path)
                             # LOG.info("Checking FLAC Tags" + str(audio))
-                        else:
+                        elif "aac" in str(foundType[0].lower):  # add flac filter:
+                            audio = AAC(song_path)
+                            #LOG.info("Checking ID3 Tags" + str(audio))
+                        elif "mp3" in str(foundType[0].lower):  # add flac filter:
                             audio = EasyID3(song_path)
+                            #LOG.info("Checking ID3 Tags" + str(audio))
+                        elif "m4a" in str(foundType[0].lower):  # add flac filter:
+                            audio = MP4(song_path)
                             #LOG.info("Checking ID3 Tags" + str(audio))
                         if len(audio) > 0:  # An ID3 tag found
                             if audio['title'] is None:
-                                if "flac" in str(fileName):  # add flac filter
-                                    self.song_label = str(fileName)[:-5]
-                                else:
-                                    self.song_label = str(fileName)[:-4]
+                                trim_length = len(str(foundType[0])) + 1
+                                self.song_label = str(fileName)[:trim_length]
                             else:
                                 self.song_label = audio['title'][0]
                                 LOG.info("Checking FLAC title: " + self.song_label)
@@ -313,17 +322,13 @@ class USBMusicSkill(CommonPlaySkill):
                             else:
                                 self.song_album = audio['album'][0]
                         else:  # There was no ID3 Tag found
-                            if "flac" in str(fileName):  # add flac filter
-                                self.song_label = str(fileName)[:-5]
-                            else:
-                                self.song_label = str(fileName)[:-4]
+                            trim_length = len(str(foundType[0])) + 1
+                            self.song_label = str(fileName)[:trim_length]
                             self.song_artist = ""
                             self.song_album = ""
                     except:
-                        if "flac" in str(fileName):  # add flac filter
-                            self.song_label = str(fileName)[:-5]
-                        else:
-                            self.song_label = str(fileName)[:-4]
+                        trim_length = len(str(foundType[0])) + 1
+                        self.song_label = str(fileName)[:trim_length]
                         self.song_artist = ""
                         self.song_album = ""
                         pass
