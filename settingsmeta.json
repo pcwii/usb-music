@@ -6,9 +6,21 @@
                 "name": "Settings",
                 "fields": [
                     {
-                        "name": "Auto_Play",
+                        "name": "auto_play",
                         "type": "checkbox",
                         "label": "Enable / Disable USB AutoPlay?",
+                        "value": "false"
+                    },
+                    {
+                        "name": "insert_command",
+                        "type": "text",
+                        "label": "List of Commands to run upon Insertion of USB Device",
+                        "value": "Set a timer for 20 minutes"
+                    },
+                    {
+                        "name": "command_enable",
+                        "type": "checkbox",
+                        "label": "Enable / Disable the Insert Command Request",
                         "value": "false"
                     },
                     {

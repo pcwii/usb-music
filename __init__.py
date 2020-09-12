@@ -8,10 +8,12 @@ from mycroft.skills.audioservice import AudioService
 from mycroft.audio.services.vlc import VlcService
 from mycroft.audio import wait_while_speaking
 
+from websocket import create_connection
 
 import threading
 from importlib import reload
 import sys
+import json
 
 from .usbScan import usbdev
 
@@ -50,7 +52,9 @@ class USBMusicSkill(CommonPlaySkill):
         self.song_artist = ""
         self.song_label = ""
         self.song_album = ""
-        self.Auto_Play = False
+        self.auto_play = False
+        self.insert_command = ""
+        self.command_enable = False
         self.prev_status = False
         self.status = False
         self.library_ready = False
@@ -59,6 +63,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.smb_path = ""
         self.smb_uname = ""
         self.smb_pass = ""
+
         self.usb_monitor = NewThread
         self.usbdevice = usbdev
         self.observer = self.usbdevice.startListener()
@@ -76,14 +81,35 @@ class USBMusicSkill(CommonPlaySkill):
         self.on_websettings_changed()
 
     def on_websettings_changed(self):  # called when updating mycroft home page
-        self.Auto_Play = self.settings.get("Auto_Play", False)  # used to enable / disable Auto_Play
+        self.auto_play = self.settings.get("auto_play", False)  # used to enable / disable auto_play
         self.local_path = self.settings.get("local_path", "/home/pi/Music")
         self.smb_path = self.settings.get("smb_path", "//192.168.0.20/SMBMusic")
         self.smb_uname = self.settings.get("smb_uname", "guest")
         self.smb_pass = self.settings.get("smb_pass", "")
-        LOG.info('USB-Music Settings Changed, AutoPlay now: ' + str(self.Auto_Play))
+        self.insert_command = self.settings.get("insert_command", "")
+        if len(self.insert_command) > 0:
+            self.command_enable = self.settings.get("command_enable", False)
+        else:
+            LOG.info('No Command Specified, Enable Set to: False')
+            self.command_enable = False
+        LOG.info('USB-Music Settings Changed, Command Enable now: ' + str(self.command_enable))
+        LOG.info('USB-Music Settings Changed, AutoPlay now: ' + str(self.auto_play))
         LOG.info('USB-Music Settings Changed, SMB Path now: ' + str(self.smb_path))
         LOG.info('USB-Music Settings Changed, Local Path now: ' + str(self.local_path))
+
+    def send_message(self, message):  # Sends the remote received commands to the messagebus
+        LOG.info("Sending a command to the message bus: " + message)
+        payload = json.dumps({
+            "type": "recognizer_loop:utterance",
+            "context": "",
+            "data": {
+                "utterances": [message]
+            }
+        })
+        uri = 'ws://localhost:8181/core'
+        ws = create_connection(uri)
+        ws.send(payload)
+        ws.close()
 
     def init_usb_monitor_thread(self):  # creates the workout thread
         self.usb_monitor.idStop = False
@@ -253,12 +279,13 @@ class USBMusicSkill(CommonPlaySkill):
                     wait_while_speaking()
                     self.song_list = [i for i in self.song_list if not (i['source'] == 'usb')]
                     self.song_list = self.merge_library(self.song_list, self.create_library(self.path, "usb"))
-                    if self.Auto_Play:
+                    if self.command_enable:
+                        self.send_message(self.insert_command)
+                    if self.auto_play:
                         self.play_all(self.song_list)
                 else:
                     #self.audio_service.stop()
                     self.mediaplayer.stop()
-
                     # unmount the path
                     self.usbdevice.uMountPathUsbDevice()
                     LOG.info("Device Removed!")
@@ -394,6 +421,7 @@ class USBMusicSkill(CommonPlaySkill):
         self.speak_dialog('now.playing')
         wait_while_speaking()
         #self.audio_service.play(tracklist)
+        #random.shuffle(tracklist)
         self.mediaplayer.add_list(tracklist)
         self.mediaplayer.play()
         self.audio_state = 'playing'
