@@ -1,6 +1,6 @@
 dependencies:
   python:
-    - mutagen
+    - mutagen>=1.32
     - pyudev>=0.21.0
     - python3-pyudev
     - vlc
