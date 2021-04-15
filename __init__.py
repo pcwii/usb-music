@@ -16,6 +16,7 @@ import sys
 import json
 
 from .usbScan import usbdev
+## from .usbScan import *
 
 import re
 import time
