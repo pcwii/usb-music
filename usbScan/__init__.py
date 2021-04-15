@@ -1,3 +1,4 @@
+# Todo Consider pip usbdev instead
 from .usbdev import getDevData
 from .usbdev import getMountPathUsbDevice
 from .usbdev import isDeviceConnected
