@@ -1,8 +1,5 @@
 dependencies:
-  python:
-    - mutagen>=1.32
-    - pyudev>=0.21.0
-    - python3-pyudev
-    - vlc
   system:
     apt-get: vlc
+    apt-get: python3-mutagen
+    apt-get: python-pyudev
