@@ -1,5 +1,3 @@
-#from unittest import TestCase, mock
-
 from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
 from adapt.intent import IntentBuilder
 from mycroft.skills.core import intent_handler, intent_file_handler
