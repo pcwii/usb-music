@@ -352,7 +352,7 @@ class USBMusicSkill(CommonPlaySkill):
                                 self.song_album = ""
                             else:
                                 self.song_album = audio['album'][0]
-                        else:  # There was no ID3 Tag found
+                        else:  # There was no ID3 Tag found, use filename as song title
                             trim_length = (len(str(foundType[0])) + 1) * -1
                             self.song_label = str(fileName)[:trim_length]
                             self.song_artist = ""
