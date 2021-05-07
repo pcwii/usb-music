@@ -372,7 +372,7 @@ class USBMusicSkill(CommonPlaySkill):
                     }
                     new_library.append(info)
         song_count = len(new_library)
-        if str(song_count) == 0:
+        if song_count == 0:
             self.speak_dialog('no.files', data={"source": str(source_type)}, expect_response=False)
         else:
             self.speak_dialog('scan.complete', data={"count": str(song_count), "source": str(source_type)},
