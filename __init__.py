@@ -372,8 +372,11 @@ class USBMusicSkill(CommonPlaySkill):
                     }
                     new_library.append(info)
         song_count = len(new_library)
-        self.speak_dialog('scan.complete', data={"count": str(song_count), "source": str(source_type)},
-                          expect_response=False)
+        if str(song_count) == 0:
+            self.speak_dialog('no.files', data={"source": str(source_type)}, expect_response=False)
+        else:
+            self.speak_dialog('scan.complete', data={"count": str(song_count), "source": str(source_type)},
+                              expect_response=False)
         wait_while_speaking()
         LOG.info("Added: " + str(song_count) + " to the library from the " + str(source_type) + " Device")
         self.library_ready = True
@@ -441,6 +444,8 @@ class USBMusicSkill(CommonPlaySkill):
         else:
             self.usbdevice.uMountPathUsbDevice()
             # Play Music Added here
+            self.speak_dialog('usb.not.mounted', expect_response=False)
+            wait_while_speaking()
             LOG.info("USB Device Not Detected")
     # Todo: Add an unmount / release command
 
