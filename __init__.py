@@ -222,17 +222,14 @@ class USBMusicSkill(CommonPlaySkill):
     def search_music_item(self, search_item, category="label"):
         # category options: label, artist, album
         found_list = []  # this is a dict of all the items found that match the search
-        if search_item is None:
-            anyTitle=True
-        else:
-            search_item = self.numeric_replace(search_item)
-            search_words = search_item.replace("-", "").lower().split()
+        search_item = self.numeric_replace(search_item)
+        search_words = search_item.replace("-", "").lower().split()
         # check each song in the list for strings that match all the words in the search
         for each_song in self.song_list:  # check each song in the list for the one we are looking for
             item_name = each_song[category].replace("-", "")
             if len(item_name) > 0:
                 item_name = self.numeric_replace(item_name)
-                if (all(words in item_name.lower() for words in search_words)) or anyTitle:
+                if all(words in item_name.lower() for words in search_words):
                     found_length = len(each_song['label'].split())
                     info = {
                         "location": each_song['location'],
