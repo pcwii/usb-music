@@ -170,7 +170,7 @@ class USBMusicSkill(CommonPlaySkill):
                 LOG.info("found artist")
                 return_item = key_found.group("artist")
                 return_type = "artist"
-            elif key_found.group("artist1"):
+            elif key_found.group("artist1"):  # added secondary artist category
                 LOG.info("found artist")
                 return_item = key_found.group("artist1")
                 return_type = "artist"
