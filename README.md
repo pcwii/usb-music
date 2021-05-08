@@ -33,6 +33,10 @@ Example:
 * "play all shook up"
 * "play the song blue suede shoes"
 * "play the album appeal to reason"
+* "play music by Elton John"
+* "play my music"
+* "play some music"
+* "play any music"
 * "update network library"
 * "update local library"
 * "update usb library"
@@ -59,6 +63,7 @@ Tested on platform_picroft (others untested)
 - Add "next/previous" commands
 - Add "random" selection
 - Add thumbnails for display
+- Need to cleanup the regex and make requests more generic (20210508)
 - ~~Add Network "SMB" support (20200710)~~
 - ~~Add support for other music formats (FLAC, OGG)~~
 - ~~Add Local path support (20200722)~~

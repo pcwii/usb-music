@@ -141,13 +141,22 @@ class USBMusicSkill(CommonPlaySkill):
 
     def parse_music_utterance(self, phrase):
         # Todo: move Regex to file for language support
+        # Todo: This needs to be refactored as it is not a sustainable way to search music
         # returns what was spoken in the utterance
+        return_item = "none"
         return_type = "any"
         str_request = str(phrase)
         LOG.info("Parse Music Received: " + str_request)
-        primary_regex = r"((?<=album) (?P<album>.*$))|((?<=artist) (?P<artist>.*$))|((?<=song) (?P<label>.*$))"
+        primary_regex = r"((?<=album) (?P<album>.*$))|((?<=by) (?P<artist1>.*$))|((?<=artist) (?P<artist>.*$))|((?<=song) (?P<label>.*$))"
+        secondary_regex = None
         if str_request.find('some') != -1:
             secondary_regex = r"((?<=some) (?P<any>.*$))"
+        elif str_request.find('my') != -1:
+            secondary_regex = r"((?<=my) (?P<any>.*$))"
+        elif str_request.find('all') != -1:
+            secondary_regex = r"((?<=all) (?P<any>.*$))"
+        elif str_request.find('any') != -1:
+            secondary_regex = r"((?<=any) (?P<any>.*$))"
         else:
             secondary_regex = r"((?<=play) (?P<any>.*$))"
         key_found = re.search(primary_regex, str_request)
@@ -161,13 +170,18 @@ class USBMusicSkill(CommonPlaySkill):
                 LOG.info("found artist")
                 return_item = key_found.group("artist")
                 return_type = "artist"
+            elif key_found.group("artist1"):
+                LOG.info("found artist")
+                return_item = key_found.group("artist")
+                return_type = "artist"
             elif key_found.group("album"):
                 LOG.info("found album")
                 return_item = key_found.group("album")
                 return_type = "album"
         else:
             LOG.info("Primary Regex Key Not Found")
-            key_found = re.search(secondary_regex, str_request)
+            if secondary_regex:
+                key_found = re.search(secondary_regex, str_request)
             if key_found.group("any"):
                 LOG.info("Secondary Regex Key Found")
                 return_item = key_found.group("any")
