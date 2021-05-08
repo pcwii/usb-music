@@ -59,7 +59,7 @@ Tested on platform_picroft (others untested)
 - [vlc](https://www.videolan.org/index.html)
 ## Installation Notes
 - SSH and run: <b>msm install https://github.com/pcwii/usb-music.git</b>
-### If all the requiments are not satisfied manually install the requirements before installing this skill
+## If all the requirements are not satisfied manually install the requirements before installing this skill
 - SSH and run:
 ```
 pip install pyudev
