@@ -195,7 +195,7 @@ class USBMusicSkill(CommonPlaySkill):
 
     def search_music_library(self, search_string, category="any"):
         found_list = []  # this is a dict that will contain all the items found in the library
-        LOG.info("searching the music library for: " + search_string + ", " + category)
+        LOG.info("searching the music library for: " + str(search_string) + ", " + str(category))
         if category == "any":
             found_list = self.search_music_item(search_string, category="label")
             if len(found_list) > 0:
