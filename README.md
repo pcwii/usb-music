@@ -59,6 +59,15 @@ Tested on platform_picroft (others untested)
 - [vlc](https://www.videolan.org/index.html)
 ## Installation Notes
 - SSH and run: <b>msm install https://github.com/pcwii/usb-music.git</b>
+### If all the requiments are not satisfied manually install the requirements before installing this skill
+- SSH and run:
+```
+pip install pyudev
+sudo apt-get install vlc
+sudo reboot
+msm remove https://github.com/pcwii/usb-music.git
+msm install https://github.com/pcwii/usb-music.git
+```
 ## Todo
 - Add "next/previous" commands
 - Add "random" selection
