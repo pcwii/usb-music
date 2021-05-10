@@ -336,7 +336,8 @@ class USBMusicSkill(CommonPlaySkill):
                 foundType = [musicType for musicType in MUSIC_TYPES if (musicType.lower() in fileName.lower())]
                 if bool(foundType):
                     song_path = str(root) + "/" + str(fileName)
-                    try:  # Removed to find error
+                    if True
+                    # try:  # Removed to find error
                         # LOG.info('Found File Type: ' + str(foundType[0]))
                         if "flac" in str(foundType[0]):  # add flac filter
                             audio = FLAC(song_path)
@@ -374,13 +375,13 @@ class USBMusicSkill(CommonPlaySkill):
                             self.song_label = str(fileName)[:trim_length]
                             self.song_artist = ""
                             self.song_album = ""
-                    except:
-                        LOG.info('Exception Occured in create_library')
-                        trim_length = (len(str(foundType[0])) + 1) * -1
-                        self.song_label = str(fileName)[:trim_length]
-                        self.song_artist = ""
-                        self.song_album = ""
-                        pass
+#                    except:
+#                        LOG.info('Exception Occured in create_library')
+#                        trim_length = (len(str(foundType[0])) + 1) * -1
+#                        self.song_label = str(fileName)[:trim_length]
+#                        self.song_artist = ""
+#                        self.song_album = ""
+#                        pass
                 info = {
                     "location": song_path,
                     "label": self.song_label,
