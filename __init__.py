@@ -337,7 +337,6 @@ class USBMusicSkill(CommonPlaySkill):
                 if bool(foundType):
                     song_path = str(root) + "/" + str(fileName)
                     try:  # Removed to find error
-                    #if True:
                         LOG.info('Found File Type: ' + str(foundType))
                         if "flac" in str(fileName.lower):  # add flac filter
                             audio = FLAC(song_path)
