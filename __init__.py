@@ -332,11 +332,13 @@ class USBMusicSkill(CommonPlaySkill):
         new_library = []
         for root, d_names, f_names in os.walk(str(source_path)):
             for fileName in f_names:
+                audio = None
                 foundType = [musicType for musicType in MUSIC_TYPES if (musicType.lower() in fileName.lower())]
                 if bool(foundType):
                     song_path = str(root) + "/" + str(fileName)
                     # try:  # Removed to find error
                     if True:
+                        LOG.info('Found Type: ' + str(foundType[0].lower))
                         if "flac" in str(foundType[0].lower):  # add flac filter
                             audio = FLAC(song_path)
                             # LOG.info("Checking FLAC Tags" + str(audio))
@@ -349,7 +351,7 @@ class USBMusicSkill(CommonPlaySkill):
                         elif "m4a" in str(foundType[0].lower):  # add flac filter:
                             audio = MP4(song_path)
                             #LOG.info("Checking ID3 Tags" + str(audio))
-                        if len(audio) > 0:  # An ID3 tag found
+                        if audio is not None:  # An ID3 tag found
                             if audio['title'] is None:
                                 trim_length = (len(str(foundType[0])) + 1) * -1
                                 self.song_label = str(fileName)[:trim_length]
