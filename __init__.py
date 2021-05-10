@@ -343,20 +343,20 @@ class USBMusicSkill(CommonPlaySkill):
                             LOG.info("Checking FLAC Tags" + str(audio))
                         elif "aac" in str(foundType[0]):  # add flac filter:
                             audio = AAC(song_path)
-                            LOG.info("Checking ID3 Tags" + str(audio))
+                            LOG.info("Checking aac Tags" + str(audio))
                         elif "mp3" in str(foundType[0]):  # add flac filter:
                             audio = EasyID3(song_path)
-                            LOG.info("Checking ID3 Tags" + str(audio))
+                            LOG.info("Checking mp3 Tags" + str(audio))
                         elif "m4a" in str(foundType[0]):  # add flac filter:
                             audio = MP4(song_path)
-                            LOG.info("Checking ID3 Tags" + str(audio))
+                            LOG.info("Checking m4a Tags" + str(audio))
                         if audio is not None:  # An ID3 tag found
                             if audio['title'] is None:
                                 trim_length = (len(str(foundType[0])) + 1) * -1
                                 self.song_label = str(fileName)[:trim_length]
                             else:
                                 self.song_label = audio['title'][0]
-                                LOG.info("Checking FLAC title: " + self.song_label)
+                                LOG.info("Validating title: " + self.song_label)
                             if audio['artist'] is None:
                                 if audio['Contributing artists']:
                                     self.song_artist = audio['Contributing artists'][0]
@@ -364,6 +364,7 @@ class USBMusicSkill(CommonPlaySkill):
                                     self.song_artist = ""
                             else:
                                 self.song_artist = audio['artist'][0]
+                                LOG.info("Validating artist: " + self.song_artist)
                             if audio['album'] is None:
                                 self.song_album = ""
                             else:
@@ -380,14 +381,14 @@ class USBMusicSkill(CommonPlaySkill):
                         self.song_artist = ""
                         self.song_album = ""
                         pass
-                    info = {
-                        "location": song_path,
-                        "label": self.song_label,
-                        "artist": self.song_artist,
-                        "album": self.song_album,
-                        "source": str(source_type)
-                    }
-                    new_library.append(info)
+                info = {
+                    "location": song_path,
+                    "label": self.song_label,
+                    "artist": self.song_artist,
+                    "album": self.song_album,
+                    "source": str(source_type)
+                }
+                new_library.append(info)
         song_count = len(new_library)
         if song_count == 0:
             self.speak_dialog('no.files', data={"source": str(source_type)}, expect_response=False)
