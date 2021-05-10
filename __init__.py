@@ -338,17 +338,17 @@ class USBMusicSkill(CommonPlaySkill):
                     song_path = str(root) + "/" + str(fileName)
                     try:  # Removed to find error
                     #if True:
-                        LOG.info('Found File: ' + str(fileName.lower()))
-                        if "flac" in str(foundType[0].lower):  # add flac filter
+                        LOG.info('Found File: ' + str(foundType))
+                        if "flac" in str(fileName.lower):  # add flac filter
                             audio = FLAC(song_path)
                             # LOG.info("Checking FLAC Tags" + str(audio))
-                        elif "aac" in str(foundType[0].lower):  # add flac filter:
+                        elif "aac" in str(fileName.lower):  # add flac filter:
                             audio = AAC(song_path)
                             #LOG.info("Checking ID3 Tags" + str(audio))
-                        elif "mp3" in str(foundType[0].lower):  # add flac filter:
+                        elif "mp3" in str(fileName.lower):  # add flac filter:
                             audio = EasyID3(song_path)
                             #LOG.info("Checking ID3 Tags" + str(audio))
-                        elif "m4a" in str(foundType[0].lower):  # add flac filter:
+                        elif "m4a" in str(fileName.lower):  # add flac filter:
                             audio = MP4(song_path)
                             #LOG.info("Checking ID3 Tags" + str(audio))
                         if audio is not None:  # An ID3 tag found
