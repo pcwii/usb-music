@@ -381,13 +381,6 @@ class USBMusicSkill(CommonPlaySkill):
                             self.song_label = str(fileName)[:trim_length]
                             self.song_artist = ""
                             self.song_album = ""
-#                    except:
-#                        LOG.info('Exception Occured in create_library')
-#                        trim_length = (len(str(foundType[0])) + 1) * -1
-#                        self.song_label = str(fileName)[:trim_length]
-#                        self.song_artist = ""
-#                        self.song_album = ""
-#                        pass
                 info = {
                     "location": song_path,
                     "label": self.song_label,
