@@ -27,7 +27,7 @@ from mutagen.easyid3 import EasyID3
 from mutagen.flac import FLAC
 from mutagen.aac import AAC
 from mutagen.mp4 import MP4
-from mutagen.id3 import ID3NoHeaderError, ID3
+from mutagen.id3 import ID3NoHeaderError
 
 for each_module in sys.modules:
     if "usbScan" in each_module:
@@ -40,7 +40,9 @@ class NewThread:
     idStop = False
     idThread = threading.Thread
 
+
 MUSIC_TYPES = ['mp3', 'm4a', 'flac', 'wav', 'wma','aac']
+
 
 class USBMusicSkill(CommonPlaySkill):
 
@@ -349,7 +351,7 @@ class USBMusicSkill(CommonPlaySkill):
                             try:
                                 audio = EasyID3(song_path)
                             except ID3NoHeaderError:
-                                LOG.info('No Tags Found... Creating!')
+                                LOG.info("No ID Tags Found... " + song_path)
                                 audio = {}
                             # LOG.info("Checking mp3 Tags" + str(audio))
                         elif "m4a" in str(foundType[0]):  # add flac filter:

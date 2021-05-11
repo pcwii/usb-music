@@ -41,6 +41,7 @@ Example:
 * "update local library"
 * "update usb library"
 * "update music library"
+* "show music library"
 * "stop"
 
 ## Credits 
