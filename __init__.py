@@ -523,6 +523,7 @@ class USBMusicSkill(CommonPlaySkill):
 
     @intent_handler(IntentBuilder('').require("StartKeyword").require("USBKeyword").require('ScanKeyword'))
     def handle_start_usb_intent(self, message):
+        # Todo: add ability to stop the thread when the skill re-loads
         LOG.info('Thread Running: ' + str(self.usb_monitor.idThread.isAlive()))
         if self.usb_monitor.idThread.isAlive():
             LOG.info("Scan is already running!")
