@@ -27,6 +27,7 @@ from mutagen.easyid3 import EasyID3
 from mutagen.flac import FLAC
 from mutagen.aac import AAC
 from mutagen.mp4 import MP4
+from mutagen.id3 import ID3NoHeaderError, ID3
 
 for each_module in sys.modules:
     if "usbScan" in each_module:
@@ -340,23 +341,28 @@ class USBMusicSkill(CommonPlaySkill):
                     # try:  # Removed to find error
                         if "flac" in str(foundType[0]):  # add flac filter
                             audio = FLAC(song_path)
-                            LOG.info("Checking FLAC Tags" + str(audio))
+                            # LOG.info("Checking FLAC Tags" + str(audio))
                         elif "aac" in str(foundType[0]):  # add flac filter:
                             audio = AAC(song_path)
-                            LOG.info("Checking aac Tags" + str(audio))
+                            # LOG.info("Checking aac Tags" + str(audio))
                         elif "mp3" in str(foundType[0]):  # add flac filter:
-                            audio = EasyID3(song_path)
-                            LOG.info("Checking mp3 Tags" + str(audio))
+                            try:
+                                audio = EasyID3(song_path)
+                            except ID3NoHeaderError:
+                                LOG.info('No Tags Found... Creating!')
+                                audio = ID3()
+                                audio.save(song_path)
+                            # LOG.info("Checking mp3 Tags" + str(audio))
                         elif "m4a" in str(foundType[0]):  # add flac filter:
                             audio = MP4(song_path)
-                            LOG.info("Checking m4a Tags" + str(audio))
+                            # LOG.info("Checking m4a Tags" + str(audio))
                         if audio is not None:  # An ID3 tag found
                             if 'title' not in audio.keys():
                                 trim_length = (len(str(foundType[0])) + 1) * -1
                                 self.song_label = str(fileName)[:trim_length]
                             else:
                                 self.song_label = audio['title'][0]
-                                LOG.info("Validating title: " + self.song_label)
+                                #LOG.info("Validating title: " + self.song_label)
                             if 'artist' not in audio.keys():
                                 if 'Contributing artists' in audio.keys() :
                                     self.song_artist = audio['Contributing artists'][0]
@@ -364,7 +370,7 @@ class USBMusicSkill(CommonPlaySkill):
                                     self.song_artist = ""
                             else:
                                 self.song_artist = audio['artist'][0]
-                                LOG.info("Validating artist: " + self.song_artist)
+                                #LOG.info("Validating artist: " + self.song_artist)
                             if 'album' not in audio.keys():
                                 self.song_album = ""
                             else:
