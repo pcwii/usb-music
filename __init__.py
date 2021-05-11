@@ -338,7 +338,6 @@ class USBMusicSkill(CommonPlaySkill):
                     song_path = str(root) + "/" + str(fileName)
                     if True:
                     # try:  # Removed to find error
-                        # LOG.info('Found File Type: ' + str(foundType[0]))
                         if "flac" in str(foundType[0]):  # add flac filter
                             audio = FLAC(song_path)
                             LOG.info("Checking FLAC Tags" + str(audio))
@@ -352,13 +351,13 @@ class USBMusicSkill(CommonPlaySkill):
                             audio = MP4(song_path)
                             LOG.info("Checking m4a Tags" + str(audio))
                         if audio is not None:  # An ID3 tag found
-                            if audio['title'] is None:
+                            if 'title' not in str(audio):
                                 trim_length = (len(str(foundType[0])) + 1) * -1
                                 self.song_label = str(fileName)[:trim_length]
                             else:
                                 self.song_label = audio['title'][0]
                                 LOG.info("Validating title: " + self.song_label)
-                            if audio['artist'] is None:
+                            if 'artist' not in str(audio):
                                 if audio['Contributing artists']:
                                     self.song_artist = audio['Contributing artists'][0]
                                 else:
@@ -366,7 +365,7 @@ class USBMusicSkill(CommonPlaySkill):
                             else:
                                 self.song_artist = audio['artist'][0]
                                 LOG.info("Validating artist: " + self.song_artist)
-                            if audio['album'] is None:
+                            if 'album' not in str(audio):
                                 self.song_album = ""
                             else:
                                 self.song_album = audio['album'][0]

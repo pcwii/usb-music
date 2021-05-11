@@ -139,7 +139,7 @@ def uMountPathUsbDevice():
 
 def MountSMBPath(smbPath=None, uname=None, pword=None):
     """
-    sudo mount -t cifs //192.168.0.20/SMBMusic /home/pi/mycroft-core/smb-music -o username=guest,password="",domain=domain
+    sudo mount -t cifs \\192.168.0.250\storage\Media\Music /home/pi/mycroft-core/smb-music -o username=guest,password="",domain=domain
     """
     if smbPath:
         LOG.info('found smb device: ' + str(smbPath))
