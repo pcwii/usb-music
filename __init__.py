@@ -352,6 +352,7 @@ class USBMusicSkill(CommonPlaySkill):
                                 LOG.info('No Tags Found... Creating!')
                                 audio = ID3()
                                 audio.save(song_path)
+                                audio = EasyID3(song_path)
                             # LOG.info("Checking mp3 Tags" + str(audio))
                         elif "m4a" in str(foundType[0]):  # add flac filter:
                             audio = MP4(song_path)
